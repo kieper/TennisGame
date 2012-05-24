@@ -16,6 +16,7 @@ import android.util.Log;
 public class CalculateGame {
 
 	private byte collisionCount = 0;
+	private final String TAG = this.getClass().getSimpleName();
 	
     public CalculateGame() {
     }
@@ -32,11 +33,14 @@ public class CalculateGame {
     public double collisionCheck(Player g1, Ball g2){
     	boolean t = Rect.intersects(g1.getRect(), g2.getRect());
 
-    	if(t  && (collisionCount == 0)){
-    		Log.d("Calcul", "Kolizja");
+    	Log.d(TAG, "Player " + g1.getRect().toString());
+    	Log.d(TAG, "BALL " + g2.getRect().toString());
+    	Log.d(TAG, "T value = " + t + " collision count value = " + collisionCount);
+    	if(t  && (collisionCount <= 0)){
+    		Log.d(TAG, "Kolizja");
     		double ratio = (g1.getRect().bottom - g2.getRect().centerY())/(double)g1.getRect().height();
 
-    		collisionCount = 5;
+    		collisionCount = 50;
     		return ratio;    		
     	}else{
     		collisionCount--;

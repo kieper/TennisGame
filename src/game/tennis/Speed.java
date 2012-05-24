@@ -10,6 +10,10 @@ import android.util.Log;
  *
  * @author Kieper
  */
+/**
+ * @author Kieper
+ *
+ */
 public class Speed extends Coordinates{
 
     private double xSpeed = 0; // x pixels per second
@@ -20,7 +24,8 @@ public class Speed extends Coordinates{
     private double ySpeedConstraint = 5;
     private long oldTime = System.currentTimeMillis();
     private long newTime;
- //   private final String TAG = this.getClass().getSimpleName();
+    @SuppressWarnings("unused")
+	private final String TAG = this.getClass().getSimpleName();
    
     public Speed(){    	
     }
@@ -41,41 +46,74 @@ public class Speed extends Coordinates{
     	this.setY(coordinates.getY());
     }
 
+    /**
+     * changes direction in X-axis 
+     */
     public void toggleXDirection() {
     	setXSpeed(-getXSpeed());
     }
 
+    /**
+     * changes direction in X-axis and change X-axis speed value 
+     */
     public void toggleXDirection(double xSpeed){
     	if(this.xSpeed >= 0){ this.xSpeed = -xSpeed;}
     	else{this.xSpeed = xSpeed;}
     }
 
+    /**
+     * changes direction in Y-axis and change Y-axis speed value 
+     */
     public void toggleYDirection(double ySpeed){
     	if(this.ySpeed >= 0){ this.ySpeed = -ySpeed;}
     	else{this.ySpeed = ySpeed;}
     }
     
+    /**
+     * changes direction in Y-axis 
+     */
     public void toggleYDirection() {
     	setYSpeed(-getYSpeed());
     }
 
+    /** 
+     * Returns x-axis speed value
+     * @return x-axis speed value
+     */
     public double getXSpeed() {
     	return xSpeed;
     }
 
+    /**
+     * Sets new x-axis speed value
+     * @param xSpeed new x-axis speed value
+     */
     public void setXSpeed(double xSpeed) {
     	this.xSpeed = xSpeed;
     	Log.d("Speed" , "TOGGLED X");
     }
 
+    /**
+     * return y-axis speed value
+     * @return y-axis speed
+     */
     public double getYSpeed() {
         return ySpeed;
     }
 
+    /**
+     * Sets new y-axis speed value
+     * @param ySpeed new y-axis speed value
+     */
     public void setYSpeed(double ySpeed) {
         this.ySpeed = ySpeed;
     }
 
+    
+    /**
+     *	Updates Coordinates, based on time passed from previous execution and parameters like 
+     *	axis speed or acceleration. 
+     */
     public void UpdateXYPosition(){
     	newTime = System.currentTimeMillis();
     	double diff = (int) (newTime - oldTime);
@@ -96,6 +134,12 @@ public class Speed extends Coordinates{
     	oldTime = newTime; 	
     }
     
+    /**
+     * Updates Coordinates, based on time passed from previous execution and parameters like 
+     *	axis speed or acceleration. New position is calculated based on equation y = alpha*x+b 
+     * @param alpha first parameter of linear equation
+     * @param b second parameter of linear equation
+     */
     public void UpdateXYPosition(double alpha, double b){
     	newTime = System.currentTimeMillis();
     	double diff = (int) (newTime - oldTime);
@@ -117,14 +161,27 @@ public class Speed extends Coordinates{
     	oldTime = newTime; 	
     }
     
+    /**
+     * Sets new x-axis acceleration
+     * @param xAccel new x-axis acceleration
+     */
     public void setAcclerationX(double xAccel){
     	this.xAccel = xAccel;
     }
     
+    /**
+     * Sets new y-axis acceleration
+     * @param yAccel new y-axis acceleration
+     */
     public void setAccelerationY(double yAccel){
     	this.yAccel = yAccel;
     }
 
+    /**
+     * Sets constraints on max value of speed
+     * @param xCon x-axis speed constraint value
+     * @param yCon y-axis speed constraint value
+     */
     public void setXYSpeedConstraint(double xCon, double yCon){
     	this.xSpeedConstraint = xCon;
     	this.ySpeedConstraint = yCon;

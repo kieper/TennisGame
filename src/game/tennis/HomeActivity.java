@@ -40,7 +40,7 @@ public class HomeActivity extends Activity {
 
         public void onClick(View v) {
             Intent intent = new Intent(activity, GameActivity.class);
-            intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER1.toString());
+            intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
             intent.putExtra(PreConfig.COMM_TYPE.toString(), CommunicationType.NONE.toString());
             startActivity(intent);
             activity.finish();

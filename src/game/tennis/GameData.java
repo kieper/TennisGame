@@ -26,10 +26,11 @@ public class GameData {
         graphicObjects = new ArrayList<GraphicObject>();        
         background = new Background(displayMetrics.getWidth(), displayMetrics.getHeight());
         player1 = new Player(background, PlayerType.PLAYER1);
-        player1.getSpeed().setConstraint(new Rect(0,0,displayMetrics.getWidth(),displayMetrics.getHeight()));
+        player1.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
         player2 = new Player(background, PlayerType.PLAYER2);
-        player1.getSpeed().setConstraint(new Rect(0,0,displayMetrics.getWidth(),displayMetrics.getHeight()));
+        player2.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
         ball = new Ball(background);
+        ball.getSpeed().setConstraint(new Rect(0,0,displayMetrics.getWidth(),displayMetrics.getHeight()));
     }
 
     public ArrayList<GraphicObject> getObjects(){

@@ -33,7 +33,7 @@ public class Player implements Graphic{
 
     	        
     	if(playerType == PlayerType.PLAYER1){
-    		speed = new Speed(0, 0, new Coordinates(bg.getPlayer1Rect().left - DST_FROM_TABLE,(int)(bg.getPlayer1Rect().bottom/2)));
+    		speed = new Speed(0, 0, new Coordinates(bg.getPlayer1Rect().left - DST_FROM_TABLE,(int)(bg.getPlayer1Rect().bottom/2+10)));
     		playerHeight = (int)(PLAYER_SIZE_RATIO*(bg.getPlayer1Rect().bottom - bg.getPlayer1Rect().top));
     	}else{
     		speed = new Speed(0, 0, new Coordinates(bg.getPlayer2Rect().right + DST_FROM_TABLE,(int)(bg.getPlayer2Rect().bottom/2+10)));

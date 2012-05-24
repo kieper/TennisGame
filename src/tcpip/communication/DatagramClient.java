@@ -48,7 +48,11 @@ public class DatagramClient {
 
 		// send request
 		byte[] buf = new byte[256];
+
+		Log.d(TAG, " getting ip of this device");
 		String ip = WifiCommunication.getLocalIpAddress();
+
+		Log.d(TAG, " device ip is " + ip);
 		ip = ip.substring(0, ip.lastIndexOf("."))+ ".255";
 		InetAddress address = InetAddress.getByName(ip.substring(0,
 				ip.lastIndexOf("."))
@@ -57,15 +61,11 @@ public class DatagramClient {
 		DatagramPacket packet = new DatagramPacket(buf, buf.length, address,
 				port);
 		socket.send(packet);
-		Log.d(TAG, " pacekt send  ");
 		// get response
 		packet = new DatagramPacket(buf, buf.length);
 		socket.receive(packet);
 		ip = packet.getAddress().getHostAddress();
-		Log.d(TAG, " response recived");
-		// display response
-		//String received = new String(packet.getData(), 0, packet.getLength());
-		
+		// display response		
 		socket.close();
 		return ip;
 	}

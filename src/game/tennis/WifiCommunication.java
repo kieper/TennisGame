@@ -20,6 +20,10 @@ import android.os.Parcel;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * @author Kieper
+ * 
+ */
 public class WifiCommunication implements Communication {
 
 	private Socket socket;
@@ -30,7 +34,7 @@ public class WifiCommunication implements Communication {
 	private static final String TAG = "WifiCommunication";
 	private final int PORT = 4000;
 	private final int VALIDATION_CODE = 1234;
-	private final int TIMEOUT = 700;
+	private final int TIMEOUT = 100000;
 	private final int SERVER_TIMEOUT = 0; 
 	
 	public WifiCommunication(Context context, PlayerType playerType){
@@ -49,11 +53,14 @@ public class WifiCommunication implements Communication {
 	@Override
 	public void sendData(Packet packet) {		
 		try {
+			Log.d(TAG, "in function send data");
+			
 			Parcel parcel = Parcel.obtain();
 			packet.writeToParcel(parcel, 0);
 			
 			byte data[] = parcel.marshall();   
 			outStream.write(data);
+			Log.d(TAG, "Data  sent");
 			
 		} catch (IOException e) {
 			Log.e(TAG, "Error while sending DATA over WIFI");
@@ -64,10 +71,15 @@ public class WifiCommunication implements Communication {
 	@Override
 	public Packet reciveData() {
 		try {
+			Log.d(TAG, "in function recive data");
 			Parcel parcel = Parcel.obtain();
+			Log.d(TAG, "Parcel obtained");
 			new Packet(0,0,0,0).writeToParcel(parcel, 0);
+			Log.d(TAG, "empty packet created");
 			byte data[] = parcel.marshall();
+			Log.d(TAG, "Parcel marshalled");
 			inStream.read(data);			
+			Log.d(TAG, "Data read from inputStream");
 			parcel.unmarshall(data, 0, data.length);			
 			return	new CreatorParcelable().createFromParcel(parcel);
 			
@@ -80,7 +92,7 @@ public class WifiCommunication implements Communication {
 	private boolean connect(String ip, int port) {
 	    try {	    	
 	        this.socket = new Socket(ip, port);
-	        Log.d(TAG, "Socket connected");
+	        Log.d(TAG, "Socket connected client");
 	        socket.setSoTimeout(TIMEOUT);
 	        this.outStream = new DataOutputStream(socket.getOutputStream());
 	        this.inStream = new DataInputStream(socket.getInputStream());
@@ -94,6 +106,7 @@ public class WifiCommunication implements Communication {
 	    return isconnected;
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean checkHosts(String subnet){
 	   int timeout=1000;
 	   for (int i=1;i<254;i++){
@@ -144,17 +157,17 @@ public class WifiCommunication implements Communication {
     		try {
 				ip = DatagramClient.sendBroadcast(PORT);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				Log.e(TAG, "Cannot broadcast datagram to server");
 				e1.printStackTrace();
 			}
-            /*String ip = getLocalIpAddress();
-            ip = ip.substring(0, ip.lastIndexOf("."));
-    		if(checkHosts(ip)){*/
+
     		if(ip != null){
     			connect(ip, PORT);
     			Background.drawMsg("Polaczony klient", -1);
+    			Log.d(TAG, "Client connected");
     		}else{
     			Background.drawMsg("NiePolaczony klient", -1);
+    			Log.d(TAG, "Client not connected");
     		} break;
     		
     	case PLAYER2:
@@ -163,7 +176,7 @@ public class WifiCommunication implements Communication {
         		Log.d(TAG, "Starting up Server");
         		DatagramServerThread s = new DatagramServerThread("asd", PORT, "zom");
         		s.run();
-        		
+
         		serverSocket = new ServerSocket(PORT);
 	        	serverSocket.setSoTimeout(SERVER_TIMEOUT);
 				socket = serverSocket.accept();
@@ -173,10 +186,10 @@ public class WifiCommunication implements Communication {
 		        this.outStream = new DataOutputStream(socket.getOutputStream());
 		        this.inStream = new DataInputStream(socket.getInputStream());
 		        Log.d(TAG, "Socket streams initialized");
-		        
+		        /*
 		        if( inStream.readInt() == VALIDATION_CODE){
 		        	outStream.writeInt(VALIDATION_CODE);
-		        }
+		        }*/
 		        Background.drawMsg("Polaczony Server", 0);
 		        Log.d(TAG, "Client Connected");
 			} catch (IOException e) {

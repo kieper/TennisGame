@@ -17,7 +17,7 @@ public class GameThread extends Thread {
     private SurfaceHolder surfaceHolder;
     private GameView panel;
     private boolean run = false;
-    private final double STATIC_FPS = 50;
+    private final double STATIC_FPS = 20;
     private final String TAG  = this.getClass().getSimpleName();
     
     public GameThread(SurfaceHolder surfaceHolder, GameView panel) {
@@ -51,10 +51,12 @@ public class GameThread extends Thread {
                     beginTime = System.currentTimeMillis();
                     timeDiff = beginTime - prevBeginTime;
                     fps = (fps + 1000/timeDiff)/2;
+                    
                     panel.setFPS(fps);
                     panel.runCalculateGame();
                     panel.onDraw(c);
                     panel.transferData();
+                    
                     if(timeDiff < (1/STATIC_FPS)*1000){
                     	try{
                     		sleep((long) ((1/STATIC_FPS)*1000-timeDiff));

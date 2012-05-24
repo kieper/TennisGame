@@ -13,6 +13,7 @@ public class GameControls implements Controls{
 	private SensorManager sensorManager;
 	private float accelX, accelY, accelZ;
 	private float calibration = 0;
+	private final double RATIO = 3;
 	
 	public GameControls(Context context){
 		sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -38,7 +39,11 @@ public class GameControls implements Controls{
 	};
 	
 	public void controlPlayer(Player player){
-		player.move(accelX-calibration);
+		if(accelX  > calibration-0.15 && accelX < calibration+0.15){ //strefa nieczuloœci 10%
+			player.move(calibration);
+		}else{
+			player.move((accelX-calibration)/RATIO);
+		}
 	}
 	
 	public void dispose(){

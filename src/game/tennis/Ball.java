@@ -6,6 +6,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+/**
+ * @author Kieper
+ *
+ */
+
+
 public class Ball implements Graphic {
 	private Speed speed;
 	private Paint paint;
@@ -16,8 +22,9 @@ public class Ball implements Graphic {
 	private double alpha = 0, b;
 	
 	public Ball(Background background) {
-		Coordinates coordinates = new Coordinates(background.getPlayer1Rect().right, background.getPlayer1Rect().bottom / 2);
+		Coordinates coordinates = new Coordinates(background.getPlayer1Rect().right, background.getPlayer1Rect().bottom / 2 +10);
 		speed = new Speed(NORMAL_SPEED, 0, coordinates);
+		speed.toggleXDirection();
 		paint = new Paint();
 		b = speed.getY() - alpha*speed.getX();		
 		beta = background.TABLE_HEIGTH /(double) background.TABLE_WIDTH;
@@ -37,17 +44,10 @@ public class Ball implements Graphic {
 		if(ratio >= 0 && ratio <= 1 ){
 			alpha = Math.abs(2* beta * ratio - beta);
 			if (ratio < 0.49 || ratio > 0.51) {
-					//double sy = Math.sqrt((NORMAL_SPEED * NORMAL_SPEED)/ (1 + beta * beta));
-					//double sx = (beta * sy);
-					//speed.toggleXDirection(sx);
-					//if(ratio >= 0.51) speed.setYSpeed(-sy);
-					//if(ratio <= 0.49) speed.setYSpeed(sy);
-			b = speed.getY() - alpha*speed.getX();		
-			speed.toggleXDirection();
-		/*	}else{
-				speed.setYSpeed(0);
+				b = speed.getY() - alpha*speed.getX();		
 				speed.toggleXDirection();
-			}*/
+			}else{
+				speed.toggleXDirection();
 			}
 			
 		}

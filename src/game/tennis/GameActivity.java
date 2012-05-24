@@ -5,8 +5,10 @@
 package game.tennis;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -20,6 +22,7 @@ import android.view.WindowManager;
 public class GameActivity extends Activity {
 
 	private final String TAG = this.getClass().getSimpleName();
+	protected PowerManager.WakeLock wakeLock;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,11 @@ public class GameActivity extends Activity {
         	playerType = PlayerType.valueOf((String) bundle.get(PreConfig.PLAYER.toString()));
         } catch (NullPointerException exception){
         	Log.e(TAG, "Error while specifying communication type");	
-        }
+        } 
+        
+        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        this.wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        this.wakeLock.acquire();
         
         Log.d(TAG, "Creating GameView");
         setContentView(new GameView(this, display, playerType, commType));
@@ -58,4 +65,11 @@ public class GameActivity extends Activity {
 
         return true;
     }
+    
+    @Override
+    public void onDestroy() {
+        this.wakeLock.release();
+        super.onDestroy();
+    }
+    
 }

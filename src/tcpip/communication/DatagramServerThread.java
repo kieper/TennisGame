@@ -38,6 +38,7 @@ import android.util.Log;
 
 public class DatagramServerThread extends Thread {
 
+	public static boolean isClientFound = false;
 	private final String TAG = this.getClass().getSimpleName();
 	protected final int PORT;
 	protected String msg;
@@ -80,6 +81,7 @@ public class DatagramServerThread extends Thread {
                 e.printStackTrace();
             }
         socket.close();
+        isClientFound = true;
     }
     
     
