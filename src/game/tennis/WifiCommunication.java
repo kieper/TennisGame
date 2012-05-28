@@ -3,6 +3,8 @@ package game.tennis;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -28,16 +30,18 @@ public class WifiCommunication implements Communication {
 
 	private Socket socket;
 	private ServerSocket serverSocket;
-	private DataOutputStream outStream;
-	private DataInputStream inStream;
+	private ObjectOutputStream outStream;
+	private ObjectInputStream inStream;
 	private boolean isconnected;	
 	private static final String TAG = "WifiCommunication";
 	private final int PORT = 4000;
 	private final int VALIDATION_CODE = 1234;
 	private final int TIMEOUT = 100000;
 	private final int SERVER_TIMEOUT = 0; 
+	private PlayerType playerType;
 	
 	public WifiCommunication(Context context, PlayerType playerType){
+		this.playerType = playerType;
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		Log.d(TAG, "Checking wifi Status");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -54,12 +58,8 @@ public class WifiCommunication implements Communication {
 	public void sendData(Packet packet) {		
 		try {
 			Log.d(TAG, "in function send data");
-			
-			Parcel parcel = Parcel.obtain();
-			packet.writeToParcel(parcel, 0);
-			
-			byte data[] = parcel.marshall();   
-			outStream.write(data);
+			Log.d(TAG, packet.toString());
+			packet.send(outStream);
 			Log.d(TAG, "Data  sent");
 			
 		} catch (IOException e) {
@@ -70,32 +70,21 @@ public class WifiCommunication implements Communication {
 
 	@Override
 	public Packet reciveData() {
-		try {
+		
 			Log.d(TAG, "in function recive data");
-			Parcel parcel = Parcel.obtain();
-			Log.d(TAG, "Parcel obtained");
-			new Packet(0,0,0,0).writeToParcel(parcel, 0);
-			Log.d(TAG, "empty packet created");
-			byte data[] = parcel.marshall();
-			Log.d(TAG, "Parcel marshalled");
-			inStream.read(data);			
-			Log.d(TAG, "Data read from inputStream");
-			parcel.unmarshall(data, 0, data.length);			
-			return	new CreatorParcelable().createFromParcel(parcel);
-			
-		} catch (IOException e) { 
-			Log.e(TAG, "Error while reciving DATA over WIFI");
-		}	
-		return null;
+			 
+			Packet packet = new Packet(inStream, playerType);
+			Log.d(TAG, packet.toString());
+			return packet;
 	}
 
 	private boolean connect(String ip, int port) {
 	    try {	    	
 	        this.socket = new Socket(ip, port);
 	        Log.d(TAG, "Socket connected client");
-	        socket.setSoTimeout(TIMEOUT);
-	        this.outStream = new DataOutputStream(socket.getOutputStream());
-	        this.inStream = new DataInputStream(socket.getInputStream());
+	        socket.setSoTimeout(TIMEOUT); 
+	        this.outStream = new ObjectOutputStream(socket.getOutputStream());
+	        this.inStream = new ObjectInputStream(socket.getInputStream());
 	        isconnected = true;
 	    } catch (IOException e) {
 	        Log.e(TAG, "connection failed on " + ip + ":" + port + " exception: " +e.toString());
@@ -183,8 +172,8 @@ public class WifiCommunication implements Communication {
 				socket.setSoTimeout(TIMEOUT);
 		        Log.d(TAG, "Connection estabilished");
 		        
-		        this.outStream = new DataOutputStream(socket.getOutputStream());
-		        this.inStream = new DataInputStream(socket.getInputStream());
+		        this.outStream = new ObjectOutputStream(socket.getOutputStream());
+		        this.inStream = new ObjectInputStream(socket.getInputStream());
 		        Log.d(TAG, "Socket streams initialized");
 		        /*
 		        if( inStream.readInt() == VALIDATION_CODE){

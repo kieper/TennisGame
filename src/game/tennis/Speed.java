@@ -16,7 +16,11 @@ import android.util.Log;
  */
 public class Speed extends Coordinates{
 
-    private double xSpeed = 0; // x pixels per second
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5717125320351063781L;
+	private double xSpeed = 0; // x pixels per second
     private double ySpeed = 0; //y pixels per second
     private double xAccel = 0; // acceleration in X
     private double yAccel = 0; // acceleration in Y

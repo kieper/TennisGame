@@ -4,14 +4,20 @@
  */
 package game.tennis;
 
+import java.io.Serializable;
+
 import android.graphics.Rect;
 
 /**
  *
  * @author Kieper
  */
-public class Coordinates {
-        private double x = 0;
+public class Coordinates implements Serializable{
+        /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1294596921394570899L;
+		private double x = 0;
         private double y = 0;
         private Rect constraint = null;
 
@@ -48,12 +54,12 @@ public class Coordinates {
             }
         }
 
-        public void setXY(int x, int y){
+        public void setXY(double x, double y){
             setY(y);
             setX(x);
         }
 
-        public void updateXY(int x, int y){
+        public void updateXY(double x, double y){
             setY(y + getY());
             setX(x + getX());
         }

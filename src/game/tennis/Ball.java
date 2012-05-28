@@ -13,6 +13,10 @@ import android.util.Log;
 
 
 public class Ball implements Graphic {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8629159685210672332L;
 	private Speed speed;
 	private Paint paint;
 	private int radius = 5;
@@ -73,4 +77,12 @@ public class Ball implements Graphic {
 				(int)(speed.getX()+radius), (int) (speed.getY()+radius));
 	}
 
+	@Override
+	public byte getType() {
+		return (byte) GraphicTypes.Ball.ordinal();
+	}
+
+	public String toString(){
+		return TAG + " x = " + getSpeed().getX() + " y = " + getSpeed().getY();    	
+    }
 }

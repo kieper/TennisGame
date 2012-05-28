@@ -16,10 +16,14 @@ import android.util.Log;
  */
 public class Player implements Graphic{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7663827760428826978L;
 	private Speed speed;
 	private Paint paint;
 	private Rect rectPlayer;
-	private int playerWidth;
+	private int playerWidth =10;
 	private int playerHeight;
 	private PlayerType playerType;
 	public final double PLAYER_SIZE_RATIO = 0.2;
@@ -29,8 +33,6 @@ public class Player implements Graphic{
     public Player(Background bg, PlayerType playerType) {
     	this.playerType = playerType;
     	rectPlayer = new Rect();
-        playerWidth = 10;
-
     	        
     	if(playerType == PlayerType.PLAYER1){
     		speed = new Speed(0, 0, new Coordinates(bg.getPlayer1Rect().left - DST_FROM_TABLE,(int)(bg.getPlayer1Rect().bottom/2+10)));
@@ -46,6 +48,7 @@ public class Player implements Graphic{
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setColor(Color.WHITE);
     }
+    
     
     public void move(double ratio){
     	speed.setAccelerationY(ratio);
@@ -88,6 +91,13 @@ public class Player implements Graphic{
 	public int getHeight() {
 		return this.rectPlayer.height();
 	}
+
+	@Override
+	public byte getType() {
+		return (byte) GraphicTypes.Player.ordinal();		
+	}
     
-    
+    public String toString(){
+		return TAG + " x = " + getSpeed().getX() + " y = " + getSpeed().getY();    	
+    }
 }
