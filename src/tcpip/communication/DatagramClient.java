@@ -42,13 +42,13 @@ public class DatagramClient {
 
 	private final static String TAG = " sendBroadcast";
 
-	public static String sendBroadcast(int port) throws IOException {
+	public static String sendBroadcast(int port, InetAddress broadcastAdr) throws IOException {
 		// get a datagram socket
 		DatagramSocket socket = new DatagramSocket();
 
 		// send request
 		byte[] buf = new byte[256];
-
+/*
 		Log.d(TAG, " getting ip of this device");
 		String ip = WifiCommunication.getLocalIpAddress();
 
@@ -57,14 +57,18 @@ public class DatagramClient {
 		InetAddress address = InetAddress.getByName(ip.substring(0,
 				ip.lastIndexOf("."))
 				+ ".255");
-		Log.d(TAG, " ip to broadcast " + ip);
-		DatagramPacket packet = new DatagramPacket(buf, buf.length, address,
+*/		
+//		InetAddress address = InetAddress.getByName(broadcastAdr);
+
+		//String ip = broadcastAdr;
+		Log.d(TAG, " ip to broadcast " + broadcastAdr);
+		DatagramPacket packet = new DatagramPacket(buf, buf.length, broadcastAdr,
 				port);
 		socket.send(packet);
 		// get response
 		packet = new DatagramPacket(buf, buf.length);
 		socket.receive(packet);
-		ip = packet.getAddress().getHostAddress();
+		String ip = packet.getAddress().getHostAddress();
 		// display response		
 		socket.close();
 		return ip;

@@ -18,6 +18,8 @@ import tcpip.communication.DatagramServerThread;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.util.Log;
 import android.widget.Toast;
@@ -38,10 +40,9 @@ public class WifiCommunication implements Communication {
 	private final int VALIDATION_CODE = 1234;
 	private final int TIMEOUT = 100000;
 	private final int SERVER_TIMEOUT = 0; 
-	private PlayerType playerType;
+	private InetAddress broadCastAddr;
 	
 	public WifiCommunication(Context context, PlayerType playerType){
-		this.playerType = playerType;
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		Log.d(TAG, "Checking wifi Status");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -50,6 +51,12 @@ public class WifiCommunication implements Communication {
 	        Toast.makeText(context, "Turn on wifi, and try again",  Toast.LENGTH_LONG).show();
 	    }else{	    	
 	    	Log.d(TAG, "WIFI connected");
+	    	try {
+				broadCastAddr = getBroadcastAddress(context);
+				Log.d(TAG, "Broadcast addr is " +broadCastAddr.toString() );
+			} catch (IOException e) {
+				Log.e(TAG, "Could not find broadcast addr");
+			}
 	    	initialize(playerType);
 	    }
 	}
@@ -144,7 +151,7 @@ public class WifiCommunication implements Communication {
     	case PLAYER1: 
     		String ip = null;
     		try {
-				ip = DatagramClient.sendBroadcast(PORT);
+				ip = DatagramClient.sendBroadcast(PORT, broadCastAddr);
 			} catch (IOException e1) {
 				Log.e(TAG, "Cannot broadcast datagram to server");
 				e1.printStackTrace();
@@ -188,4 +195,19 @@ public class WifiCommunication implements Communication {
     	}
 	}
 	
+	
+	private InetAddress getBroadcastAddress(Context context) throws IOException {
+		WifiManager myWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		DhcpInfo myDhcpInfo = myWifiManager.getDhcpInfo();
+		if (myDhcpInfo == null) {
+			System.out.println("Could not get broadcast address");
+			return null;
+		}
+		int broadcast = (myDhcpInfo.ipAddress & myDhcpInfo.netmask)
+					| ~myDhcpInfo.netmask;
+		byte[] quads = new byte[4];
+		for (int k = 0; k < 4; k++)
+		quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+		return InetAddress.getByAddress(quads);
+	}
 }
