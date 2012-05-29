@@ -53,7 +53,7 @@ public class Ball implements Graphic {
 			//double lastAlfa = Math.atan2(speed.getYSpeed(), speed.getXSpeed());
 			
 			//ratio: 0;1 => alfa: pi/2;-pi/2
-			double alfa = -((ratio-0.5) * Math.PI);
+			double alfa = ((ratio-0.5) * Math.PI);
 			if(speed.getXSpeed() > 0){
 				alfa = alfa + Math.PI; //alfa: -pi/2; 3/2pi
 			}

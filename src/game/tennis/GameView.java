@@ -35,10 +35,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         getHolder().addCallback(GameView.this);       
         
-        gameData = new GameData(context, displayMetrics);
-        calcGame = new CalculateGame();
-        gameControls = new GameControls(context);     
-        
         if(playerType != null ){
         	this.playerType = playerType;
         }else{        	
@@ -69,6 +65,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(comm == null){
         	Background.drawMsg("Nie nawiazano polaczenia", 0);
         }
+        
+        gameData = new GameData(context, displayMetrics);
+        calcGame = new CalculateGame();
+        gameControls = new GameControls(context);     
+
         threadGame = new GameThread(getHolder(), this);
         setFocusable(true);
     }
