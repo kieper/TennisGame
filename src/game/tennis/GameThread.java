@@ -51,11 +51,11 @@ public class GameThread extends Thread {
                     beginTime = System.currentTimeMillis();
                     timeDiff = beginTime - prevBeginTime;
                     fps = (fps + 1000/timeDiff)/2;
-                    
+                    panel.transferData();                  
                     panel.setFPS(fps);
                     panel.runCalculateGame();
                     panel.onDraw(c);
-                    panel.transferData();
+
                     
                     if(timeDiff < (1/STATIC_FPS)*1000){
                     	try{

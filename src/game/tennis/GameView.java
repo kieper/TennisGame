@@ -27,7 +27,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread threadGame;
     private Controls gameControls;
     private double FPS = 0;
-    private PlayerType playerType;
+    private static PlayerType playerType;
     private Communication comm;
     private final String TAG = this.getClass().getSimpleName();
     
@@ -148,15 +148,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void transferData(){
     	Packet packet = new Packet(gameData, playerType);
     	if(playerType == PlayerType.PLAYER2){  //Server
-    		comm.sendData(packet);  
-    		packet = comm.reciveData();
-    		packet.setPlayerData(gameData); // <- nullpointer excep
-    	}else{ //klient
+    		comm.sendData(packet);  //Send data about this player and ball position
+    		packet = comm.reciveData(); //recive data 
+    		packet.setPlayerData(gameData); // <- set new position of player got from packet
+    	}else{ //client
     		packet = comm.reciveData();
     		packet.setPlayerData(gameData); // <- nullpointer excep
     		packet.setBallData(gameData);
     		packet = new Packet(gameData, playerType);
     		comm.sendData(packet);
     	}
+    }
+    
+    public static PlayerType getOppositePlayer(){
+    	if(playerType == null) throw new NullPointerException();
+    	return (playerType == PlayerType.PLAYER1)? PlayerType.PLAYER2: PlayerType.PLAYER1;
     }
 }

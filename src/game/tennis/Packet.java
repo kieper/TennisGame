@@ -26,7 +26,7 @@ public class Packet implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -2050680319755447574L;
-	public final String TAG = this.getClass().getSimpleName();
+	public  final String TAG = this.getClass().getSimpleName();
 	private ArrayList<Buffer> data;
 	private PlayerType playerType;
 	/**
@@ -41,7 +41,11 @@ public class Packet implements Serializable {
 		data.add(new Buffer(gameData.getPlayer(playerType).getSpeed().getX(),gameData.getPlayer(playerType).getSpeed().getY(), gameData.getPlayer(playerType).getType()));
 	}
 	
-
+	public Packet(ArrayList<Buffer> data, PlayerType playerType){
+		this.playerType = playerType;
+		this.data = data;
+	}
+	
 	public void setPlayerData(GameData gameData){		
 		for(Buffer g:data){
 			if(g.type == GraphicTypes.Player.ordinal()){				
@@ -65,18 +69,22 @@ public class Packet implements Serializable {
 		for(Buffer g:data){
 			oos.writeObject(g); //write all elements from array list
 		}
-		oos.writeByte(0); //end of transmission signal
+
 	}
 	
-	public Packet(ObjectInputStream ois, PlayerType playerType) {
-		data = new ArrayList<Buffer>();
-		this.playerType = playerType;
+	public static Packet creatorPacket(ObjectInputStream ois ) {
+		ArrayList<Buffer> data = new ArrayList<Buffer>();
+		String TAG = "Packet.CreatorPacket";
+		PlayerType playerType = GameView.getOppositePlayer();
+		
+		
 		int n = 0;
 		try {
 			n = ois.readByte(); //how many object to read?
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} 
+		
 		Log.d(TAG," elements to read is " + n );
 		data.clear();
 		for(int i = 0; i < n; i++){
@@ -93,11 +101,9 @@ public class Packet implements Serializable {
 			data.add(g);
 			Log.d(TAG, g.toString() );
 		}
-		try {
-			ois.readByte();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		Log.d(TAG, "Done " );
+		return new Packet(data, playerType);
 	}
 	
 	public String toString(){
@@ -107,67 +113,14 @@ public class Packet implements Serializable {
 		}
 		return txt;
 	}
-	/*
-	public byte[] toByteStream(){
-		byte[] data = new byte[2*4*Data.size()+1];
-	    int j = 0;  
-		for(Point i:Data.values()){
-	    	  byte[] bytes1 = ByteBuffer.allocate(4).putInt(i.x).array();
-	    	  byte[] bytes2 = ByteBuffer.allocate(4).putInt(i.y).array();
-	    	  
-	    	  System.arraycopy(bytes1,0,data,j++*4,bytes1.length);
-	    	  System.arraycopy(bytes2,0,data,j++*4,bytes2.length);
-	    	 
-	      	  Log.d(TAG, "byte data x= "+ i.x + " y =" + i.y);		      
-	    }
-		
-		if(playerType == PlayerType.PLAYER1){
-			data[data.length-1] = 1;
-		}else{
-			data[data.length-1] = 2;
-		}
-		String a = "";
-		for(byte b:data){
-			a += b+" ";
-		}
-		Log.d("Moj", a);	
-		return data;
-	}
 	
-	public void getFromByteStream(byte[] data){
-		String a = "";
-		for(byte b:data){
-			a += b+" ";
-		}
-		Log.d("Moj", a);
-		int j = data.length/4+1;  
-		ByteBuffer buffer = ByteBuffer.wrap(data);
-		Data.clear();
-		Log.d(TAG, buffer.toString());
-		//for(int i = 0; i < j ; i++){
-			int x = buffer.getInt();
-			int y = buffer.getInt();
-			Data.put(Keys.PLAYER, new Point(x,y));
-			Log.d(TAG, "byte data got x= "+ x + " y =" + y);		      
-	    //}
-		
-		if(data[8] == 1){
-			playerType = PlayerType.PLAYER1;
-		}else{
-			playerType = PlayerType.PLAYER2;
-		}
-	}
-	
-	public int getBytesArraySize(){
-		return Data.size()*4+1;
-	}*/
-	
+
 	
 	/**
 	 * @author Kieper
 	 * This class has all variables to create object whose ancestor is Graphic interface
 	 */
-	private class Buffer implements Serializable{
+	public class Buffer implements Serializable{
 		
 		/**
 		 * 
@@ -175,6 +128,7 @@ public class Packet implements Serializable {
 		private static final long serialVersionUID = -5394687784242022095L;
 		private double x,y;
 		private byte type;
+		
 		
 		private Buffer(double x, double y, byte type){
 			this.x = x;
@@ -187,3 +141,4 @@ public class Packet implements Serializable {
 		}
 	}
 }
+

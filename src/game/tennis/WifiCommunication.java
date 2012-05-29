@@ -73,7 +73,7 @@ public class WifiCommunication implements Communication {
 		
 			Log.d(TAG, "in function recive data");
 			 
-			Packet packet = new Packet(inStream, playerType);
+			Packet packet = Packet.creatorPacket(inStream);
 			Log.d(TAG, packet.toString());
 			return packet;
 	}

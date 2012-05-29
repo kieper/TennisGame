@@ -40,7 +40,7 @@ public class GameControls implements Controls{
 	
 	public void controlPlayer(Player player){
 		if(accelX  > calibration-0.15 && accelX < calibration+0.15){ //strefa nieczuloœci 10%
-			player.move(calibration);
+			player.move(0);
 		}else{
 			player.move((accelX-calibration)/RATIO);
 		}
