@@ -127,44 +127,19 @@ public class Speed extends Coordinates{
     	
     	double yNewSpeed = getYSpeed() + yAccel*diff;
     	double xNewSpeed = getXSpeed() + xAccel*diff;
+    	//double yNewSpeed = yAccel*10;
+    	//double xNewSpeed = xAccel*10;
     	
     	if(xNewSpeed == 0 || Math.abs(xNewSpeed) < Math.abs(xSpeedConstraint)){ setXSpeed( xNewSpeed );}    	
     	else if(xNewSpeed < 0) { setXSpeed(-this.xSpeedConstraint);}
     	else if(xNewSpeed > 0) { setXSpeed(this.xSpeedConstraint);}
     	
-    	if(yNewSpeed ==0 || Math.abs(yNewSpeed) < Math.abs(ySpeedConstraint)) setYSpeed( yNewSpeed );    	
+    	if(yNewSpeed == 0 || Math.abs(yNewSpeed) < Math.abs(ySpeedConstraint)) setYSpeed( yNewSpeed );    	
     	else if(yNewSpeed < 0) { setYSpeed(-this.ySpeedConstraint);}
     	else if(yNewSpeed > 0) { setYSpeed(this.ySpeedConstraint);}
     	oldTime = newTime; 	
     }
-    
-    /**
-     * Updates Coordinates, based on time passed from previous execution and parameters like 
-     *	axis speed or acceleration. New position is calculated based on equation y = alpha*x+b 
-     * @param alpha first parameter of linear equation
-     * @param b second parameter of linear equation
-     */
-    public void UpdateXYPosition(double alpha, double b){
-    	newTime = System.currentTimeMillis();
-    	double diff = (int) (newTime - oldTime);
-    	diff /= 50;
-    	double x = (getX() +(getXSpeed()*diff+xAccel*(diff*diff)/2));
-    	setY( alpha*x + b );
-    	setX( x );
-    	
-    	double yNewSpeed = getYSpeed() + yAccel*diff;
-    	double xNewSpeed = getXSpeed() + xAccel*diff;
-    	
-    	if(xNewSpeed == 0 || Math.abs(xNewSpeed) < Math.abs(xSpeedConstraint)){ setXSpeed( xNewSpeed );}    	
-    	else if(xNewSpeed < 0) { setXSpeed(-this.xSpeedConstraint);}
-    	else if(xNewSpeed > 0) { setXSpeed(this.xSpeedConstraint);}
-    	
-    	if(yNewSpeed ==0 || Math.abs(yNewSpeed) < Math.abs(ySpeedConstraint)) setYSpeed( yNewSpeed );    	
-    	else if(yNewSpeed < 0) { setYSpeed(-this.ySpeedConstraint);}
-    	else if(yNewSpeed > 0) { setYSpeed(this.ySpeedConstraint);}
-    	oldTime = newTime; 	
-    }
-    
+
     /**
      * Sets new x-axis acceleration
      * @param xAccel new x-axis acceleration

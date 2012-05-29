@@ -51,7 +51,9 @@ public class Player implements Graphic{
     
     
     public void move(double ratio){
-    	speed.setAccelerationY(ratio);
+    	//speed.setAccelerationY(ratio);
+    	double newSpeed = ratio*10;
+    	speed.setYSpeed((speed.getYSpeed() + newSpeed)/2);
     }
 
     public void draw(Canvas canvas){

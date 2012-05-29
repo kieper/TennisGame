@@ -49,8 +49,8 @@ public class Coordinates implements Serializable{
         public void setY(double value) {
             y = value;
             if(constraint != null){
-            	if(y < constraint.left) y = constraint.top;
-            	if(y > constraint.right) y = constraint.bottom;
+            	if(y < constraint.top) y = constraint.top;
+            	if(y > constraint.bottom) y = constraint.bottom;
             }
         }
 

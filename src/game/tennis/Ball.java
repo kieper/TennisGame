@@ -21,23 +21,24 @@ public class Ball implements Graphic {
 	private Paint paint;
 	private int radius = 5;
 	private final double NORMAL_SPEED = 5;
-	private final double beta;
+	//private final double beta;
 	private final String TAG = this.getClass().getSimpleName();
-	private double alpha = 0, b;
+	//private double alpha = 0, b;
 	
 	public Ball(Background background) {
 		Coordinates coordinates = new Coordinates(background.getPlayer1Rect().right, background.getPlayer1Rect().bottom / 2 +10);
 		speed = new Speed(NORMAL_SPEED, 0, coordinates);
 		speed.toggleXDirection();
 		paint = new Paint();
-		b = speed.getY() - alpha*speed.getX();		
-		beta = background.TABLE_HEIGTH /(double) background.TABLE_WIDTH;
+		//b = speed.getY() - alpha*speed.getX();		
+		//beta = background.TABLE_HEIGTH /(double) background.TABLE_WIDTH;
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setColor(Color.WHITE);		
 	}
 
 	public void draw(Canvas canvas) {
-		speed.UpdateXYPosition(alpha, b);
+		speed.UpdateXYPosition();
+		//speed.UpdateXYPosition(alpha, b);
 		canvas.drawCircle(Math.round(speed.getX()), Math.round(speed.getY()), radius, paint);
 		Log.d(TAG, "drawBall position (" + speed.getX() + ", " + speed.getY()
 				+ ")");
@@ -46,14 +47,19 @@ public class Ball implements Graphic {
 	public void move(double ratio) {
 		Log.d(TAG, "got : " + ratio);
 		if(ratio >= 0 && ratio <= 1 ){
-			alpha = Math.abs(2* beta * ratio - beta);
-			if (ratio < 0.49 || ratio > 0.51) {
-				b = speed.getY() - alpha*speed.getX();		
-				speed.toggleXDirection();
-			}else{
-				speed.toggleXDirection();
+			//set new vx and vy:		
+			//speed.toggleXDirection();
+			//lastAlfa = -PI; PI
+			//double lastAlfa = Math.atan2(speed.getYSpeed(), speed.getXSpeed());
+			
+			//ratio: 0;1 => alfa: pi/2;-pi/2
+			double alfa = -((ratio-0.5) * Math.PI);
+			if(speed.getXSpeed() > 0){
+				alfa = alfa + Math.PI; //alfa: -pi/2; 3/2pi
 			}
 			
+			speed.setXSpeed( Math.cos(alfa)*NORMAL_SPEED);
+			speed.setYSpeed( Math.sin(alfa)*NORMAL_SPEED);
 		}
 	}
 	@Override
