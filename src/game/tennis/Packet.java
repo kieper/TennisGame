@@ -21,7 +21,7 @@ import android.util.Log;
  * to opponent via other classes. 
  * First element of ArrayList is graphic of Ball, second is Player.
  */
-public class Packet implements Serializable {		
+public class Packet implements Serializable{		
 	/**
 	 * 
 	 */
@@ -29,8 +29,9 @@ public class Packet implements Serializable {
 	public  final String TAG = this.getClass().getSimpleName();
 	private ArrayList<Buffer> data;
 	private PlayerType playerType;
+	
 	/**
-	 * Creates Instace of packet
+	 * Creates instance of packet
 	 * @param gameData From this class data to send is taken
 	 * @param playerType Type of player on current device
 	 */
@@ -69,18 +70,17 @@ public class Packet implements Serializable {
 		for(Buffer g:data){
 			oos.writeObject(g); //write all elements from array list
 		}
-
 	}
 	
 	public static Packet creatorPacket(ObjectInputStream ois ) {
 		ArrayList<Buffer> data = new ArrayList<Buffer>();
-		String TAG = "Packet.CreatorPacket";
-		PlayerType playerType = GameView.getOppositePlayer();
+		String TAG = "Packet.CreatorPacket"; //create tag(need to be done manualy because of static)
+		PlayerType playerType = GameView.getOppositePlayer(); // set playerType to type of opponent
 		
 		
 		int n = 0;
 		try {
-			n = ois.readByte(); //how many object to read?
+			n = ois.readByte(); //how many objects to read?
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} 
@@ -90,7 +90,7 @@ public class Packet implements Serializable {
 		for(int i = 0; i < n; i++){
 			Buffer g = null;
 			try {
-				g = (Buffer) ois.readObject();
+				g = (Buffer) ois.readObject(); //read data sent from other device
 			} catch (OptionalDataException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -120,7 +120,7 @@ public class Packet implements Serializable {
 	 * @author Kieper
 	 * This class has all variables to create object whose ancestor is Graphic interface
 	 */
-	public class Buffer implements Serializable{
+	private class Buffer implements Serializable{
 		
 		/**
 		 * 

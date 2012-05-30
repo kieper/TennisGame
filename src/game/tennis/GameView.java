@@ -26,10 +26,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private CalculateGame calcGame;
     private GameThread threadGame;
     private Controls gameControls;
+    private CommThread commThread;
     private double FPS = 0;
     private static PlayerType playerType;
     private Communication comm;
     private final String TAG = this.getClass().getSimpleName();
+    
     
     public GameView(Context context, Display displayMetrics, PlayerType playerType, CommunicationType communicationType) {
         super(context);
@@ -42,12 +44,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         	throw new NullPointerException();
         }
         
-        Log.d(TAG, "Player set to " + this.playerType);
+        Log.d(TAG, "Player set to " + getPlayerType());
         if(communicationType != null ){
         	switch(communicationType){
         		case WIFI:
         			Log.d(TAG, "Starting WIFI communication");
-        			comm = new WifiCommunication(context, this.playerType);
+        			comm = new WifiCommunication(context, getPlayerType());
         			break;        		
         		case NONE:
         			Log.d(TAG, "Starting new solo communication");
@@ -69,20 +71,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameData = new GameData(context, displayMetrics);
         calcGame = new CalculateGame();
         gameControls = new GameControls(context);     
-
+        commThread = new CommThread(this);
         threadGame = new GameThread(getHolder(), this);
+        
+        commThread.setRunning(true);
+        commThread.start();
+        
         setFocusable(true);
     }
 
     public void runCalculateGame(){
-    	if(playerType == PlayerType.PLAYER2){
+    	if(getPlayerType() == PlayerType.PLAYER2){
     		//calcGame.calculatePosition(gameData.getObjects());
         	
         	gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));
         	gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer2(), gameData.getBall()));    
     	
     	}
-    	gameControls.controlPlayer(gameData.getPlayer(playerType));
+    	gameControls.controlPlayer(gameData.getPlayer(getPlayerType()));
         
     }
 
@@ -147,8 +153,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
     
     public void transferData(){
-    	Packet packet = new Packet(gameData, playerType);
-    	if(playerType == PlayerType.PLAYER2){  //Server
+    	Packet packet = new Packet(gameData, getPlayerType());
+    	if(getPlayerType() == PlayerType.PLAYER2){  //Server
     		comm.sendData(packet);  //Send data about this player and ball position
     		packet = comm.reciveData(); //recive data 
     		packet.setPlayerData(gameData); // <- set new position of player got from packet
@@ -156,13 +162,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     		packet = comm.reciveData();
     		packet.setPlayerData(gameData); // <- nullpointer excep
     		packet.setBallData(gameData);
-    		packet = new Packet(gameData, playerType);
+    		packet = new Packet(gameData, getPlayerType());
     		comm.sendData(packet);
     	}
     }
     
     public static PlayerType getOppositePlayer(){
-    	if(playerType == null) throw new NullPointerException();
-    	return (playerType == PlayerType.PLAYER1)? PlayerType.PLAYER2: PlayerType.PLAYER1;
+    	if(getPlayerType() == null) throw new NullPointerException();
+    	return (getPlayerType() == PlayerType.PLAYER1)? PlayerType.PLAYER2: PlayerType.PLAYER1;
     }
+
+	public static PlayerType getPlayerType() {
+		return playerType;
+	}
+
 }

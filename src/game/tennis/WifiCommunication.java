@@ -1,7 +1,5 @@
 package game.tennis;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,7 +18,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
-import android.os.Parcel;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -182,10 +179,7 @@ public class WifiCommunication implements Communication {
 		        this.outStream = new ObjectOutputStream(socket.getOutputStream());
 		        this.inStream = new ObjectInputStream(socket.getInputStream());
 		        Log.d(TAG, "Socket streams initialized");
-		        /*
-		        if( inStream.readInt() == VALIDATION_CODE){
-		        	outStream.writeInt(VALIDATION_CODE);
-		        }*/
+
 		        Background.drawMsg("Polaczony Server", 0);
 		        Log.d(TAG, "Client Connected");
 			} catch (IOException e) {

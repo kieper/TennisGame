@@ -50,8 +50,7 @@ public class GameThread extends Thread {
                 synchronized (surfaceHolder) {
                     beginTime = System.currentTimeMillis();
                     timeDiff = beginTime - prevBeginTime;
-                    fps = (fps + 1000/timeDiff)/2;
-                    panel.transferData();                  
+                    fps = (fps + 1000/timeDiff)/2;           
                     panel.setFPS(fps);
                     panel.runCalculateGame();
                     panel.onDraw(c);
