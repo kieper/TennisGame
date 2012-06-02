@@ -62,7 +62,7 @@ public class GameActivity extends Activity {
 
         // Call super code so we dont limit default interaction
         super.onKeyDown(keyCode, event);
-
+        
         return true;
     }
     

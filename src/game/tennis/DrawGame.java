@@ -11,9 +11,12 @@ import java.util.ArrayList;
  *
  * @author Kieper
  */
-public class DrawGame {
+public class DrawGame implements Draw{
 
-    public DrawGame() {
+	private GameData gameData;
+	
+    public DrawGame(GameData gameData) {
+    	this.gameData = gameData;
     }
 
 
@@ -27,8 +30,11 @@ public class DrawGame {
         }
     }
 
-    public void draw(Canvas canvas, GraphicObject go) {
-        go.draw(canvas);
+    public void draw(Canvas canvas) {
+        gameData.getBackground().draw(canvas);
+        gameData.getPlayer1().draw(canvas);
+        gameData.getPlayer2().draw(canvas);
+        gameData.getBall().draw(canvas);
     }
     
 }

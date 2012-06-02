@@ -4,6 +4,8 @@
  */
 package game.tennis;
 
+import java.util.Observable;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +15,9 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
 
@@ -22,87 +27,39 @@ import android.widget.Toast;
  */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
-    private GameData gameData;
-    private CalculateGame calcGame;
-    private GameThread threadGame;
-    private Controls gameControls;
-    private CommThread commThread;
+
     private double FPS = 0;
     private static PlayerType playerType;
-    private Communication comm;
+    private static CommunicationType communicationType;
     private final String TAG = this.getClass().getSimpleName();
+    private GameThread threadGame;
+    private Controls controls;    
+    private GameData gameData;
+    private Communication comm;
     
     
     public GameView(Context context, Display displayMetrics, PlayerType playerType, CommunicationType communicationType) {
         super(context);
         getHolder().addCallback(GameView.this);       
         
-        if(playerType != null ){
+        if(playerType != null && communicationType != null ){
         	this.playerType = playerType;
+        	this.communicationType = communicationType;
         }else{        	
-        	Toast.makeText(context,"Can not specify player type", Toast.LENGTH_LONG).show();
+        	Toast.makeText(context,"Can not specify player or communication type", Toast.LENGTH_LONG).show();
         	throw new NullPointerException();
-        }
-        
-        Log.d(TAG, "Player set to " + getPlayerType());
-        if(communicationType != null ){
-        	switch(communicationType){
-        		case WIFI:
-        			Log.d(TAG, "Starting WIFI communication");
-        			comm = new WifiCommunication(context, getPlayerType());
-        			break;        		
-        		case NONE:
-        			Log.d(TAG, "Starting new solo communication");
-        			comm = new SoloCommunication(gameData, PlayerType.PLAYER1);
-        			break;
-        		case BLUETOOTH:
-        		default:
-        			Toast.makeText(context,"Can not specify communication type", Toast.LENGTH_LONG).show();
-        			throw new  UnsupportedOperationException();
-        	}
-        }else{
-        	Toast.makeText(context,"Can not specify communication type", Toast.LENGTH_LONG).show();
-        	throw new NullPointerException();
-        }
-        if(comm == null){
-        	Background.drawMsg("Nie nawiazano polaczenia", 0);
-        }
-        
-        gameData = new GameData(context, displayMetrics);
-        calcGame = new CalculateGame();
-        gameControls = new GameControls(context);     
-        commThread = new CommThread(this);
-        threadGame = new GameThread(getHolder(), this);
-        
-        commThread.setRunning(true);
-        commThread.start();
-        
+        }        
+        this.setOnTouchListener(TouchListener.getInstance());        
+        threadGame = new GameThread(getHolder(), this, context, displayMetrics);
         setFocusable(true);
     }
 
-    public void runCalculateGame(){
-    	if(getPlayerType() == PlayerType.PLAYER2){
-    		//calcGame.calculatePosition(gameData.getObjects());
-        	
-        	gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));
-        	gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer2(), gameData.getBall()));    
-    	
-    	}
-    	gameControls.controlPlayer(gameData.getPlayer(getPlayerType()));
-        
-    }
+
 
     @Override
     public void onDraw(Canvas canvas) {
-        gameData.getBackground().draw(canvas);
-        gameData.getPlayer1().draw(canvas);
-        gameData.getPlayer2().draw(canvas);
-        gameData.getBall().draw(canvas);
-        
-        gameControls.draw(canvas);
-        
-        //drawGame.draw(canvas, gameData.getObjects());
-        
+    	gameData.draw(canvas);
+                        
         Paint p = new Paint();
         p.setColor(Color.RED);
         p.setTextSize(40);
@@ -111,6 +68,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+    	Log.e(TAG, "Touch Happend" );
         synchronized (threadGame.getSurfaceHolder()) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
@@ -132,7 +90,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        gameControls.dispose();
     	
     	boolean retry = true;
         threadGame.setRunning(false);
@@ -168,12 +125,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
     
     public static PlayerType getOppositePlayer(){
-    	if(getPlayerType() == null) throw new NullPointerException();
+    	if( getPlayerType() == null) throw new NullPointerException();
     	return (getPlayerType() == PlayerType.PLAYER1)? PlayerType.PLAYER2: PlayerType.PLAYER1;
     }
 
 	public static PlayerType getPlayerType() {
 		return playerType;
+	}
+
+	public static CommunicationType getCommunicationType(){
+		return communicationType;
+	}
+	
+	public void setGameData(GameData gameData){
+		this.gameData = gameData;
+	}
+	
+	public void setControls(Controls controls){
+		this.controls = controls;
+	}
+	
+	public void setCommunication(Communication comm){
+		this.comm = comm;
 	}
 
 }

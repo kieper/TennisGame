@@ -6,6 +6,7 @@
 package game.tennis;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.Display;
 import java.util.ArrayList;
@@ -16,14 +17,23 @@ import java.util.ArrayList;
  */
 public class GameData {
 	
-    private ArrayList<GraphicObject> graphicObjects;
-    private final Background background;
+    private static GameData gameData = new GameData();
+	private ArrayList<GraphicObject> graphicObjects;
+    private Background background;
     private Player player1;
     private Player player2;
     private Ball ball;
+    private Draw drawGame;
+    private Draw drawMsg;
+    private int drawFlag = 1; // keeps state of what should be drawn on view 1 - game, 2 - msg
     
-    public GameData(Context context, Display displayMetrics){
+    private GameData(){
         graphicObjects = new ArrayList<GraphicObject>();        
+        drawGame = new DrawGame(this);
+        drawMsg = new DrawMsg();
+    }
+
+    public void initialize(Context context, Display displayMetrics){
         background = new Background(displayMetrics.getWidth(), displayMetrics.getHeight());
         player1 = new Player(background, PlayerType.PLAYER1);
         player1.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
@@ -32,7 +42,11 @@ public class GameData {
         ball = new Ball(background);
         ball.getSpeed().setConstraint(new Rect(0,0,displayMetrics.getWidth(),displayMetrics.getHeight()));
     }
-
+    
+    public static GameData getInstance(){
+    	return gameData;
+    }
+    
     public ArrayList<GraphicObject> getObjects(){
         return graphicObjects;
     }
@@ -62,5 +76,30 @@ public class GameData {
     
     public Ball getBall(){
     	return ball;
+    }
+    
+    /**
+     * Draws elements of game or msg depending on current state value
+     * @param canvas canvas on which elements should be drawn
+     */
+    public void draw(Canvas canvas){
+    	switch(drawFlag){
+    		case 1:
+    			drawGame.draw(canvas);
+    			break;
+    		case 2:
+    			drawMsg.draw(canvas);
+    			break;
+    		default:
+    			drawGame.draw(canvas);	
+    	}
+    }
+    
+    /**
+     * Sets state for what should be drawn
+     * @param state 1 - game, 2 - msg
+     */
+    public void changeDrawing(int state){
+    	drawFlag = state;
     }
 }

@@ -38,11 +38,15 @@ public class WifiCommunication implements Communication {
 	private final int TIMEOUT = 100000;
 	private final int SERVER_TIMEOUT = 0; 
 	private InetAddress broadCastAddr;
+	private waitThread wt;
 	
 	public WifiCommunication(Context context, PlayerType playerType){
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		Log.d(TAG, "Checking wifi Status");
 		System.setProperty("java.net.preferIPv4Stack", "true");
+		wt = new waitThread();
+		wt.setRunning(true);
+		wt.start();
 	    if( ! cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting() ) {
 	    	Log.d(TAG, "WIFI not connected");
 	        Toast.makeText(context, "Turn on wifi, and try again",  Toast.LENGTH_LONG).show();
@@ -56,6 +60,7 @@ public class WifiCommunication implements Communication {
 			}
 	    	initialize(playerType);
 	    }
+	    wt.setRunning(false);
 	}
 	
 	@Override
@@ -156,10 +161,12 @@ public class WifiCommunication implements Communication {
 
     		if(ip != null){
     			connect(ip, PORT);
-    			Background.drawMsg("Polaczony klient", -1);
+        		GameData.getInstance().changeDrawing(2);
+        		DrawMsg.drawMsg("Udalo sie nawiazac polaczenie", 2000);
     			Log.d(TAG, "Client connected");
     		}else{
-    			Background.drawMsg("NiePolaczony klient", -1);
+        		GameData.getInstance().changeDrawing(2);
+        		DrawMsg.drawMsg("Nie udalo sie nawiazac polaczenia", 2000);
     			Log.d(TAG, "Client not connected");
     		} break;
     		
@@ -180,7 +187,8 @@ public class WifiCommunication implements Communication {
 		        this.inStream = new ObjectInputStream(socket.getInputStream());
 		        Log.d(TAG, "Socket streams initialized");
 
-		        Background.drawMsg("Polaczony Server", 0);
+	    		GameData.getInstance().changeDrawing(2);
+	    		DrawMsg.drawMsg("Wszystko smiga", 2000);
 		        Log.d(TAG, "Client Connected");
 			} catch (IOException e) {
 				Log.e("TAG", "Server set to listen errror");
