@@ -30,6 +30,8 @@ public class Packet implements Serializable{
 	private ArrayList<Buffer> data;
 	private PlayerType playerType;
 	
+	long timeCorrection;
+	
 	/**
 	 * Creates instance of packet
 	 * @param gameData From this class data to send is taken
@@ -37,9 +39,12 @@ public class Packet implements Serializable{
 	 */
 	public Packet(GameData gameData, PlayerType playerType){
 		this.playerType = playerType;
-		data = new ArrayList<Buffer>();		
-		data.add(new Buffer(gameData.getBall().getSpeed().getX(),gameData.getBall().getSpeed().getY(),gameData.getBall().getType()));
-		data.add(new Buffer(gameData.getPlayer(playerType).getSpeed().getX(),gameData.getPlayer(playerType).getSpeed().getY(), gameData.getPlayer(playerType).getType()));
+		this.timeCorrection = 0;
+		Speed ballSpeed = gameData.getBall().getSpeed();
+		Speed playerSpeed = gameData.getPlayer(playerType).getSpeed();
+		data = new ArrayList<Buffer>();
+		data.add(new Buffer(ballSpeed.getX(),ballSpeed.getY(),ballSpeed.getXSpeed(),ballSpeed.getYSpeed(),gameData.getBall().getType(), System.currentTimeMillis()));
+		data.add(new Buffer(playerSpeed.getX(),playerSpeed.getY(),playerSpeed.getXSpeed(),playerSpeed.getYSpeed(),gameData.getPlayer(playerType).getType(), System.currentTimeMillis()));
 	}
 	
 	public Packet(ArrayList<Buffer> data, PlayerType playerType){
@@ -47,9 +52,14 @@ public class Packet implements Serializable{
 		this.data = data;
 	}
 	
+	public void setTimeCorrection(long timeCorrection){
+		this.timeCorrection = timeCorrection;
+	}
+	
 	public void setPlayerData(GameData gameData){		
 		for(Buffer g:data){
-			if(g.type == GraphicTypes.Player.ordinal()){				
+			if(g.type == GraphicTypes.Player.ordinal()){
+				gameData.getPlayer(playerType).getSpeed().setSpeed(g.vx, g.vy);
 				gameData.getPlayer(playerType).getSpeed().setXY(g.x, g.y);
 				return;
 			}
@@ -59,7 +69,8 @@ public class Packet implements Serializable{
 	public void setBallData(GameData gameData){
 		for(Buffer g:data){
 			if(g.type == GraphicTypes.Ball.ordinal()){
-				gameData.getBall().getSpeed().setXY(g.x, g.y);
+				Speed ballSpeed = gameData.getBall().getSpeed();
+				ballSpeed.setData(g.x, g.y, g.vx, g.vy, g.time + timeCorrection);
 				return;
 			}
 		}
@@ -114,30 +125,36 @@ public class Packet implements Serializable{
 		return txt;
 	}
 	
-
-	
 	/**
 	 * @author Kieper
 	 * This class has all variables to create object whose ancestor is Graphic interface
 	 */
 	private class Buffer implements Serializable{
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -5394687784242022095L;
 		private double x,y;
+		private double vx, vy;
+		private long time; //czas w ktorym pakiet zostal wyslany (wedlug czasu drugiego urzadzenia)
 		private byte type;
 		
 		
-		private Buffer(double x, double y, byte type){
+		/*private Buffer(double x, double y, byte type){
+			this.vx = 0;
+			this.vy = 0;
+			this.type = type;
+		}*/
+		
+		private Buffer(double x, double y, double vx, double vy, byte type, long time){
 			this.x = x;
 			this.y = y;
+			this.vx = vx;
+			this.vy = vy;
 			this.type = type;
-		}		
+			this.time = time;
+		}			
 		
 		public String toString(){
-			return "x = " + x + " y = "+ y+ " type = " + type;			
+			return "x = " + x + " y = "+ y + " vx = " + vx + " vy = " + vy + " type = " + type;			
 		}
 	}
 }

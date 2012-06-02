@@ -1,8 +1,11 @@
 package game.tennis;
 
+//import game.tennis.Packet.Buffer;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -40,6 +43,8 @@ public class WifiCommunication implements Communication {
 	private InetAddress broadCastAddr;
 	private waitThread wt;
 	
+	private long timeCorrection = 0;
+	
 	public WifiCommunication(Context context, PlayerType playerType){
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		Log.d(TAG, "Checking wifi Status");
@@ -59,6 +64,7 @@ public class WifiCommunication implements Communication {
 				Log.e(TAG, "Could not find broadcast addr");
 			}
 	    	initialize(playerType);
+	    	synchronizeTime(playerType);
 	    }
 	    wt.setRunning(false);
 	}
@@ -79,10 +85,11 @@ public class WifiCommunication implements Communication {
 
 	@Override
 	public Packet reciveData() {
-		
 			Log.d(TAG, "in function recive data");
-			 
+			Log.d(TAG, "set packet time correction");
+
 			Packet packet = Packet.creatorPacket(inStream);
+			packet.setTimeCorrection(timeCorrection);
 			Log.d(TAG, packet.toString());
 			return packet;
 	}
@@ -197,7 +204,6 @@ public class WifiCommunication implements Communication {
     	}
 	}
 	
-	
 	private InetAddress getBroadcastAddress(Context context) throws IOException {
 		WifiManager myWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		DhcpInfo myDhcpInfo = myWifiManager.getDhcpInfo();
@@ -211,5 +217,63 @@ public class WifiCommunication implements Communication {
 		for (int k = 0; k < 4; k++)
 		quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
 		return InetAddress.getByAddress(quads);
+	}
+
+	private void sentTimeSynchronizationPacket(long time){
+		try {
+			Ping ping = new Ping(1, time);
+			outStream.writeObject(ping);
+		}catch (IOException e) {
+			Log.e(TAG, "Error while sending DATA over WIFI");
+		}
+	}
+	private long recvTimeSynchronizationPacket(){
+		Ping ping;
+		try {
+			ping = (Ping) inStream.readObject(); //read data sent from other device
+			return ping.getTime();
+		} catch (OptionalDataException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	private void synchronizeTime(PlayerType playerType){
+		long time0, time1, time2;
+    	switch(playerType){
+    	case PLAYER1:
+    		//on player1 time0 -> send player1 time0
+    		//on player1 time2 -> recv player2 time1
+    		//on player1 time2 -> send player1 time2
+    		time0 = System.currentTimeMillis();
+    		sentTimeSynchronizationPacket(time0);
+    		time1 = recvTimeSynchronizationPacket();
+    	    time2 = System.currentTimeMillis();
+    		sentTimeSynchronizationPacket(time2);
+    		
+    		//(time2 + time0)/2 -> player1 time
+    		//recived time1     -> player2 time
+    		timeCorrection = (time2 + time0)/2 - time1;
+    		break;
+    	case PLAYER2:
+    	default:
+    		//on player2 time1 -> recv player1 time0
+    		//on player2 time1 -> send player2 time1
+    		//on player2 time3 -> recv player1 time2
+			Packet packet = Packet.creatorPacket(inStream);
+    		time0 = recvTimeSynchronizationPacket();
+    		time1 = System.currentTimeMillis();
+    		sentTimeSynchronizationPacket(time1);
+    		time2 = recvTimeSynchronizationPacket();
+
+    		//(time2 + time0)/2 -> player1 time
+    		//recived time1     -> player2 time
+    		timeCorrection = (time2 + time0)/2 - time1;
+    		break;
+    	}
 	}
 }

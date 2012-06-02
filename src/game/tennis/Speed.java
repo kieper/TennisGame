@@ -10,15 +10,8 @@ import android.util.Log;
  *
  * @author Kieper
  */
-/**
- * @author Kieper
- *
- */
 public class Speed extends Coordinates{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 5717125320351063781L;
 	private double xSpeed = 0; // x pixels per second
     private double ySpeed = 0; //y pixels per second
@@ -104,7 +97,7 @@ public class Speed extends Coordinates{
     public double getYSpeed() {
         return ySpeed;
     }
-
+    
     /**
      * Sets new y-axis speed value
      * @param ySpeed new y-axis speed value
@@ -112,6 +105,24 @@ public class Speed extends Coordinates{
     public void setYSpeed(double ySpeed) {
         this.ySpeed = ySpeed;
     }
+
+    /**
+     * Sets new x-axis and y-axis speed value
+     * @param xSpeed new x-axis speed value
+     * @param ySpeed new y-axis speed value
+     */
+    public void setSpeed(double xSpeed, double ySpeed) {
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+    }
+
+	public void setData(double x, double y, double xSpeed, double ySpeed, long time){
+		this.setX(x);
+		this.setY(y);
+		this.xSpeed = xSpeed;
+		this.ySpeed = ySpeed;
+		this.oldTime = time;
+	}
 
     
     /**
