@@ -115,6 +115,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     		comm.sendData(packet);  //Send data about this player and ball position
     		packet = comm.reciveData(); //recive data 
     		packet.setPlayerData(gameData); // <- set new position of player got from packet
+       		packet.setBallData(gameData);
     	}else{ //client
     		packet = comm.reciveData();
     		packet.setPlayerData(gameData); // <- nullpointer excep

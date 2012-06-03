@@ -131,13 +131,11 @@ public class GameThread extends Thread   {
     }
     
     public void runCalculateGame(){
-    	if(GameView.getPlayerType() == PlayerType.PLAYER2){
+    	//if(GameView.getPlayerType() == PlayerType.PLAYER2){
     		//calcGame.calculatePosition(gameData.getObjects());
-        	
-        	gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));
-        	gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer2(), gameData.getBall()));    
-    	
-    	}
+        gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));
+        gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer2(), gameData.getBall()));    
+    	//}
     	controls.controlPlayer(gameData.getPlayer(GameView.getPlayerType()));
         
     }

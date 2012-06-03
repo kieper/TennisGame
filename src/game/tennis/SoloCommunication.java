@@ -18,7 +18,12 @@ public class SoloCommunication implements Communication{
 	
 	@Override
 	public void sendData(Packet packet) {
-		//simulatePlayer(packet);
+		try {
+			Thread.sleep(100);//give me some sleep:)
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		simulatePlayer(packet);
 	}
 
 	@Override
@@ -30,11 +35,7 @@ public class SoloCommunication implements Communication{
 		
 		Player player = gameData.getPlayer(playerType);
 		Ball ball = gameData.getBall();
-		if( player.getSpeed().getY() >  ball.getSpeed().getY() ){
-			player.getSpeed().setAccelerationY(1);
-		} else{
-			player.getSpeed().setAccelerationY(-1);			
-		}
+		player.getSpeed().setYSpeed(0.3*(ball.getSpeed().getY() - player.getSpeed().getY()));
 		
 	}
 }

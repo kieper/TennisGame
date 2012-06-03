@@ -124,17 +124,35 @@ public class Speed extends Coordinates{
 		this.oldTime = time;
 	}
 
-    
+	public long getTime(){
+		return oldTime;
+	}
+
     /**
      *	Updates Coordinates, based on time passed from previous execution and parameters like 
      *	axis speed or acceleration. 
      */
     public void UpdateXYPosition(){
+        UpdateXYPosition(false, false);
+    }
+    /**
+     *	Updates Coordinates, based on time passed from previous execution and parameters like 
+     *	axis speed or acceleration. 
+     */
+    public void UpdateXYPosition(boolean bounceX, boolean bounceY){
     	newTime = System.currentTimeMillis();
     	double diff = (int) (newTime - oldTime);
     	diff /= 50;
-    	setY( (getY() +(getYSpeed()*diff+yAccel*(diff*diff)/2)) );
-    	setX( (getX() +(getXSpeed()*diff+xAccel*(diff*diff)/2)) );
+    	double mx = setX( (getX() +(getXSpeed()*diff+xAccel*(diff*diff)/2)) );
+    	double my = setY( (getY() +(getYSpeed()*diff+yAccel*(diff*diff)/2)) );
+    	if(bounceX && mx != 0){
+    		setX(getX() + mx);
+    		toggleXDirection();
+    	}
+    	if(bounceY && my != 0){
+    		setY(getY() + my);
+    		toggleYDirection();
+    	}
     	
     	double yNewSpeed = getYSpeed() + yAccel*diff;
     	double xNewSpeed = getXSpeed() + xAccel*diff;

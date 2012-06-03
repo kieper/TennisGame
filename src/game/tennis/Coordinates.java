@@ -34,24 +34,40 @@ public class Coordinates implements Serializable{
             return x;
         }
 
-        public void setX(double d) {
-            x = d;
+        public double setX(double value) {
+            x = value;
+            double m=0;
             if(constraint != null){
-            	if(x < constraint.left) x = constraint.left;
-            	if(x > constraint.right) x = constraint.right;
+            	if(x < constraint.left){
+            		m = constraint.left - x;
+            		x = constraint.left;
+            	}
+            	if(x > constraint.right){
+            		m = constraint.right - x;
+            		x = constraint.right;
+            	}
             }
+            return m;
         }
 
         public double getY() {
             return y;
         }
 
-        public void setY(double value) {
+        public double setY(double value) {
             y = value;
+            double m=0;
             if(constraint != null){
-            	if(y < constraint.top) y = constraint.top;
-            	if(y > constraint.bottom) y = constraint.bottom;
+            	if(y < constraint.top){
+            		m = constraint.top - y;
+            		y = constraint.top;
+            	}
+            	if(y > constraint.bottom){
+            		m = constraint.bottom - y;
+            		y = constraint.bottom;
+            	}
             }
+            return m;
         }
 
         public void setXY(double x, double y){

@@ -20,7 +20,8 @@ public final class Background {
     public final int  TABLE_HEIGTH;
 	private Paint paint;
     private Rect rectPlayer1Side, rectPlayer2Side; //two halfs of table
-    private final double BORDER  = 0.1; //Table distance from screen edges
+    private Rect rectTable; //whole table
+    private final double BORDER  = 0.03; //Table distance from screen edges
 
     
     public Background(int width, int height) {
@@ -30,6 +31,8 @@ public final class Background {
 		
 		rectPlayer1Side = new Rect((int)(BORDER * width),(int)( BORDER * height), (int)( width/2), (int)((1-BORDER)*height));
         rectPlayer2Side = new Rect((int)( width/2),(int)( BORDER * height), (int)((1-BORDER) * width),(int)((1-BORDER)*height) );
+        
+        rectTable = new Rect((int)(BORDER * width),(int)( BORDER * height), (int)((1-BORDER) * width),(int)((1-BORDER)*height) );
         
         paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
@@ -49,9 +52,11 @@ public final class Background {
     	return this.rectPlayer1Side;
     }
     
-
     public Rect getPlayer2Rect(){
     	return this.rectPlayer2Side;
     }
 
+    public Rect getTableRect(){
+    	return this.rectTable;
+    }
 }

@@ -36,11 +36,11 @@ public class GameData {
     public void initialize(Context context, Display displayMetrics){
         background = new Background(displayMetrics.getWidth(), displayMetrics.getHeight());
         player1 = new Player(background, PlayerType.PLAYER1);
-        player1.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
+        //player1.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
         player2 = new Player(background, PlayerType.PLAYER2);
-        player2.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
+        //player2.getSpeed().setConstraint(new Rect(0,15,displayMetrics.getWidth()-5,displayMetrics.getHeight()));
         ball = new Ball(background);
-        ball.getSpeed().setConstraint(new Rect(0,0,displayMetrics.getWidth(),displayMetrics.getHeight()));
+        //ball.getSpeed().setConstraint(new Rect(0,0,displayMetrics.getWidth(),displayMetrics.getHeight()));
     }
     
     public static GameData getInstance(){

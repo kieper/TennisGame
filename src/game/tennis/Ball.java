@@ -26,9 +26,10 @@ public class Ball implements Graphic {
 	//private double alpha = 0, b;
 	
 	public Ball(Background background) {
-		Coordinates coordinates = new Coordinates(background.getPlayer1Rect().right, background.getPlayer1Rect().bottom / 2 +10);
+		Coordinates coordinates = new Coordinates(background.getPlayer2Rect().centerX(), background.getPlayer2Rect().centerY());
 		speed = new Speed(NORMAL_SPEED, 0, coordinates);
 		speed.toggleXDirection();
+		speed.setConstraint(background.getTableRect());
 		paint = new Paint();
 		//b = speed.getY() - alpha*speed.getX();		
 		//beta = background.TABLE_HEIGTH /(double) background.TABLE_WIDTH;
@@ -37,7 +38,7 @@ public class Ball implements Graphic {
 	}
 
 	public void draw(Canvas canvas) {
-		speed.UpdateXYPosition();
+		speed.UpdateXYPosition(false, true);
 		//speed.UpdateXYPosition(alpha, b);
 		canvas.drawCircle(Math.round(speed.getX()), Math.round(speed.getY()), radius, paint);
 		Log.d(TAG, "drawBall position (" + speed.getX() + ", " + speed.getY()
@@ -51,11 +52,10 @@ public class Ball implements Graphic {
 			//speed.toggleXDirection();
 			//lastAlfa = -PI; PI
 			//double lastAlfa = Math.atan2(speed.getYSpeed(), speed.getXSpeed());
-			
 			//ratio: 0;1 => alfa: pi/2;-pi/2
-			double alfa = ((ratio-0.5) * Math.PI);
+			double alfa = ((0.5-ratio) * Math.PI);
 			if(speed.getXSpeed() > 0){
-				alfa = alfa + Math.PI; //alfa: -pi/2; 3/2pi
+				alfa = - alfa + Math.PI; //alfa: -pi/2; 3/2pi
 			}
 			
 			speed.setXSpeed( Math.cos(alfa)*NORMAL_SPEED);

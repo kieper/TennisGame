@@ -27,8 +27,10 @@ public class Player implements Graphic{
 	private int playerHeight;
 	private PlayerType playerType;
 	public final double PLAYER_SIZE_RATIO = 0.2;
-	private final int DST_FROM_TABLE = 15;
+	private final int DST_FROM_TABLE = -15;
 	private String TAG = this.getClass().getSimpleName();
+	
+	private Rect sideRect;
 	
     public Player(Background bg, PlayerType playerType) {
     	this.playerType = playerType;
@@ -37,9 +39,13 @@ public class Player implements Graphic{
     	if(playerType == PlayerType.PLAYER1){
     		speed = new Speed(0, 0, new Coordinates(bg.getPlayer1Rect().left - DST_FROM_TABLE,(int)(bg.getPlayer1Rect().bottom/2+10)));
     		playerHeight = (int)(PLAYER_SIZE_RATIO*(bg.getPlayer1Rect().bottom - bg.getPlayer1Rect().top));
+    		speed.setConstraint(bg.getPlayer1Rect());
+            sideRect = bg.getPlayer1Rect();
     	}else{
     		speed = new Speed(0, 0, new Coordinates(bg.getPlayer2Rect().right + DST_FROM_TABLE,(int)(bg.getPlayer2Rect().bottom/2+10)));
     		playerHeight = (int)(PLAYER_SIZE_RATIO*(bg.getPlayer2Rect().bottom - bg.getPlayer2Rect().top));
+            speed.setConstraint(bg.getPlayer2Rect());
+            sideRect = bg.getPlayer2Rect();
     	}
     	
     	updatePlayerRect();
@@ -47,6 +53,7 @@ public class Player implements Graphic{
     	paint= new Paint();
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setColor(Color.WHITE);
+        
     }
     
     
@@ -76,7 +83,6 @@ public class Player implements Graphic{
     	rectPlayer.left = (int) (speed.getX() - playerWidth/2);
     	rectPlayer.right = (int) (speed.getX() + playerWidth/2);
     	rectPlayer.bottom = (int) (speed.getY() + playerHeight/2);
-    	
     }
 
 	@Override
@@ -99,6 +105,10 @@ public class Player implements Graphic{
 		return (byte) GraphicTypes.Player.ordinal();		
 	}
     
+	public Rect getSideRect(){
+		return sideRect;
+	}
+	
     public String toString(){
 		return TAG + " x = " + getSpeed().getX() + " y = " + getSpeed().getY();    	
     }
