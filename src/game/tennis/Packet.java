@@ -43,7 +43,7 @@ public class Packet implements Serializable{
 		Speed ballSpeed = gameData.getBall().getSpeed();
 		Speed playerSpeed = gameData.getPlayer(playerType).getSpeed();
 		data = new ArrayList<Buffer>();
-		data.add(new Buffer(ballSpeed.getX(),ballSpeed.getY(),ballSpeed.getXSpeed(),ballSpeed.getYSpeed(),gameData.getBall().getType(), playerSpeed.getTime()));
+		data.add(new Buffer(ballSpeed.getX(),ballSpeed.getY(),ballSpeed.getXSpeed(),ballSpeed.getYSpeed(),gameData.getBall().getType(), ballSpeed.getTime()));
 		data.add(new Buffer(playerSpeed.getX(),playerSpeed.getY(),playerSpeed.getXSpeed(),playerSpeed.getYSpeed(),gameData.getPlayer(playerType).getType(), playerSpeed.getTime()));
 	}
 	
@@ -59,8 +59,10 @@ public class Packet implements Serializable{
 	public void setPlayerData(GameData gameData){		
 		for(Buffer g:data){
 			if(g.type == GraphicTypes.Player.ordinal()){
-				gameData.getPlayer(playerType).getSpeed().setSpeed(g.vx, g.vy);
-				gameData.getPlayer(playerType).getSpeed().setXY(g.x, g.y);
+				//gameData.getPlayer(playerType).getSpeed().setSpeed(g.vx, g.vy);
+				//gameData.getPlayer(playerType).getSpeed().setXY(g.x, g.y);
+				gameData.getPlayer(playerType).getSpeed().setData(g.x, g.y, g.vx, g.vy, g.time + timeCorrection);
+				gameData.getPlayer(playerType).getSpeed().UpdateXYPosition();
 				return;
 			}
 		}		
@@ -70,9 +72,11 @@ public class Packet implements Serializable{
 		for(Buffer g:data){
 			if(g.type == GraphicTypes.Ball.ordinal()){
 				//if(playerType == PlayerType.PLAYER2){
-				if(gameData.getPlayer(playerType).getSideRect().contains((int)g.x, (int)g.y)){
+				if(gameData.getPlayer(playerType).getSideRect().contains((int)Math.round(g.x), (int)Math.round(g.y))){
+					
 					Speed ballSpeed = gameData.getBall().getSpeed();
 					ballSpeed.setData(g.x, g.y, g.vx, g.vy, g.time + timeCorrection);
+					ballSpeed.UpdateXYPosition(false, true);
 					return;
 				}
 			}
@@ -83,7 +87,8 @@ public class Packet implements Serializable{
 		oos.writeByte(data.size()); //write how much elements will be sent
 		for(Buffer g:data){
 			oos.writeObject(g); //write all elements from array list
-		}		
+		}
+		oos.flush();
 	}
 	
 	public static Packet creatorPacket(ObjectInputStream ois ) {

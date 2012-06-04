@@ -20,10 +20,10 @@ public class Ball implements Graphic {
 	private Speed speed;
 	private Paint paint;
 	private int radius = 5;
-	private final double NORMAL_SPEED = 5;
 	
-	
+	private final double NORMAL_SPEED = 10;
 	private final boolean D = false;
+	
 	private final String TAG = this.getClass().getSimpleName();
 	
 	public Ball(Background background) {
@@ -50,9 +50,9 @@ public class Ball implements Graphic {
 			if(speed.getXSpeed() > 0){
 				alfa = - alfa + Math.PI; //alfa: -pi/2; 3/2pi
 			}
-			
-			speed.setXSpeed( Math.cos(alfa)*NORMAL_SPEED);
-			speed.setYSpeed( Math.sin(alfa)*NORMAL_SPEED);
+
+			speed.setYSpeed( Math.sin(alfa)*NORMAL_SPEED );
+			speed.setXSpeed( Math.cos(alfa)*NORMAL_SPEED );
 		}
 	}
 	@Override

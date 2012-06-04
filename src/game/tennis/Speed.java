@@ -17,8 +17,8 @@ public class Speed extends Coordinates{
     private double ySpeed = 0; //y pixels per second
     private double xAccel = 0; // acceleration in X
     private double yAccel = 0; // acceleration in Y
-    private double xSpeedConstraint = 5;
-    private double ySpeedConstraint = 5;
+    private double xSpeedConstraint = 20;
+    private double ySpeedConstraint = 20;
     private long oldTime = System.currentTimeMillis();
     private long newTime;
     @SuppressWarnings("unused")
@@ -142,7 +142,7 @@ public class Speed extends Coordinates{
      */
     public void UpdateXYPosition(boolean bounceX, boolean bounceY){
     	newTime = System.currentTimeMillis();
-    	double diff = (int) (newTime - oldTime);
+    	double diff = (double) (newTime - oldTime);
     	diff /= 50;
     	double mx = setX( (getX() +(getXSpeed()*diff+xAccel*(diff*diff)/2)) );
     	double my = setY( (getY() +(getYSpeed()*diff+yAccel*(diff*diff)/2)) );
