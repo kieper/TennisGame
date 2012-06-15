@@ -48,10 +48,15 @@ public class HostTypeActivity extends Activity {
         private Activity activity;
 
         public void onClick(View v) {
-            Intent intent = new Intent(activity, GameActivity.class);
+        	Intent intent;
+        	if(commType == CommunicationType.BLUETOOTH){
+        		intent = new Intent(activity, BtActivity.class);
+        	}else{
+        		intent = new Intent(activity, WifiActivity.class);            	
+        	}
             intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER1.toString());
             intent.putExtra(PreConfig.COMM_TYPE.toString(), commType.toString());
-            startActivity(intent);
+            startActivity(intent); 
             activity.finish();
         }
 
@@ -65,8 +70,13 @@ public class HostTypeActivity extends Activity {
         private Activity activity;
 
         public void onClick(View v) {
-            Intent intent = new Intent(activity, GameActivity.class);
-            intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
+        	Intent intent;
+        	if(commType == CommunicationType.BLUETOOTH){
+        		intent = new Intent(activity, BtActivity.class);
+        	}else{
+        		intent = new Intent(activity, GameActivity.class);            	
+        	}
+        	intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
             intent.putExtra(PreConfig.COMM_TYPE.toString(), commType.toString());
             startActivity(intent);
             activity.finish();

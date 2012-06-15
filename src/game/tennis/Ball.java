@@ -21,9 +21,10 @@ public class Ball implements Graphic {
 	private Paint paint;
 	private int radius = 5;
 	private final double NORMAL_SPEED = 5;
-	//private final double beta;
+	
+	
+	private final boolean D = false;
 	private final String TAG = this.getClass().getSimpleName();
-	//private double alpha = 0, b;
 	
 	public Ball(Background background) {
 		Coordinates coordinates = new Coordinates(background.getPlayer2Rect().centerX(), background.getPlayer2Rect().centerY());
@@ -31,28 +32,20 @@ public class Ball implements Graphic {
 		speed.toggleXDirection();
 		speed.setConstraint(background.getTableRect());
 		paint = new Paint();
-		//b = speed.getY() - alpha*speed.getX();		
-		//beta = background.TABLE_HEIGTH /(double) background.TABLE_WIDTH;
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setColor(Color.WHITE);		
 	}
 
 	public void draw(Canvas canvas) {
 		speed.UpdateXYPosition(false, true);
-		//speed.UpdateXYPosition(alpha, b);
 		canvas.drawCircle(Math.round(speed.getX()), Math.round(speed.getY()), radius, paint);
-		Log.d(TAG, "drawBall position (" + speed.getX() + ", " + speed.getY()
+		if(D)Log.d(TAG, "drawBall position (" + speed.getX() + ", " + speed.getY()
 				+ ")");
 	}
 
 	public void move(double ratio) {
-		Log.d(TAG, "got : " + ratio);
+		if(D)Log.d(TAG, "got : " + ratio);
 		if(ratio >= 0 && ratio <= 1 ){
-			//set new vx and vy:		
-			//speed.toggleXDirection();
-			//lastAlfa = -PI; PI
-			//double lastAlfa = Math.atan2(speed.getYSpeed(), speed.getXSpeed());
-			//ratio: 0;1 => alfa: pi/2;-pi/2
 			double alfa = ((0.5-ratio) * Math.PI);
 			if(speed.getXSpeed() > 0){
 				alfa = - alfa + Math.PI; //alfa: -pi/2; 3/2pi

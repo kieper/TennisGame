@@ -23,7 +23,8 @@ public class Speed extends Coordinates{
     private long newTime;
     @SuppressWarnings("unused")
 	private final String TAG = this.getClass().getSimpleName();
-   
+    private boolean D = false;
+    
     public Speed(){    	
     }
     
@@ -87,7 +88,7 @@ public class Speed extends Coordinates{
      */
     public void setXSpeed(double xSpeed) {
     	this.xSpeed = xSpeed;
-    	Log.d("Speed" , "TOGGLED X");
+    	if(D)Log.d("Speed" , "TOGGLED X");
     }
 
     /**

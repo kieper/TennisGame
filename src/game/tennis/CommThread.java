@@ -13,13 +13,14 @@ public class CommThread extends Thread {
     private Communication comm;
     private GameData gameData;
     private boolean connected = false;
-    
+    private String ip;
 	private final String TAG  = this.getClass().getSimpleName();
     
-    public CommThread(GameView panel, Context context, Communication comm, GameData gameData) {
+    public CommThread(GameView panel, Context context, Communication comm, GameData gameData, String ip) {
         this.panel = panel;
         this.context = context;
         this.gameData = gameData;
+        this.ip = ip;
     }
 
     public void setRunning(boolean run) {
@@ -39,15 +40,18 @@ public class CommThread extends Thread {
     	switch( GameView.getCommunicationType()){
     		case WIFI:
     			Log.d(TAG, "Starting WIFI communication");
-    			comm = new WifiCommunication(context, GameView.getPlayerType());
+    			comm = new WifiCommunication(context, GameView.getPlayerType(), ip);
     			break;        		
     		case NONE:
     			Log.d(TAG, "Starting new solo communication");
     			comm = new SoloCommunication(gameData, PlayerType.PLAYER1);
     			break;
     		case BLUETOOTH:
+    			Log.d(TAG, "Starting BT communication");
+    			comm = new BtCommunication(context);
+    			break;
+    			
     		default:
-    			Toast.makeText(context,"Can not specify communication type", Toast.LENGTH_LONG).show();
     			throw new  UnsupportedOperationException();
     	}
 

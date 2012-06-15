@@ -1,5 +1,5 @@
 package game.tennis;
 
 public enum PreConfig {
-	PLAYER, COMM_TYPE
+	PLAYER, COMM_TYPE, IP
 }

@@ -24,6 +24,7 @@ public class GameThread extends Thread   {
     private boolean run = false;
     private final double STATIC_FPS = 20;
     private final String TAG  = this.getClass().getSimpleName();
+    private boolean D = true;
     private GameData gameData;
     private CalculateGame calcGame;
     private Controls controls;
@@ -31,13 +32,14 @@ public class GameThread extends Thread   {
     private Communication comm;
     private Context context;
     private Display displayMetrics;
+    private String ip;
     
-    
-    public GameThread(SurfaceHolder surfaceHolder, GameView panel, Context context, Display displayMetrics) {
+    public GameThread(SurfaceHolder surfaceHolder, GameView panel, Context context, Display displayMetrics, String ip) {
         this.surfaceHolder = surfaceHolder;
         this.panel = panel;
         this.context = context;
         this.displayMetrics = displayMetrics;
+        this.ip = ip;
     }
 
     public void setRunning(boolean run) {
@@ -59,7 +61,6 @@ public class GameThread extends Thread   {
 
         this.initialize();
         panel.setGameData(gameData);
-        panel.setControls(controls);
         
         //allows to draw on view while sockets block other threads
         while(!commThread.isConnected()){
@@ -82,6 +83,7 @@ public class GameThread extends Thread   {
                 }
             }
         }
+        if(D)Log.d(TAG, "Starting gamming loop, communication estabilished");
         
         //Run the game loop
         while (run) {
@@ -125,17 +127,15 @@ public class GameThread extends Thread   {
     	calcGame = new CalculateGame();
     	controls = new GameControls(context);    
     	
-    	commThread = new CommThread(panel, context, comm, gameData);
+    	commThread = new CommThread(panel, context, comm, gameData, ip);
     	commThread.setRunning(true);
     	commThread.start();
     }
     
     public void runCalculateGame(){
-    	//if(GameView.getPlayerType() == PlayerType.PLAYER2){
-    		//calcGame.calculatePosition(gameData.getObjects());
+
         gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));
         gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer2(), gameData.getBall()));    
-    	//}
     	controls.controlPlayer(gameData.getPlayer(GameView.getPlayerType()));
         
     }

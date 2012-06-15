@@ -76,5 +76,6 @@ public class HomeActivity extends Activity {
         super.onKeyDown(keyCode, event);
 
         return true;
-    }
+    }    
+
 }

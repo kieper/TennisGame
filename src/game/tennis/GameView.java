@@ -33,24 +33,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static CommunicationType communicationType;
     private final String TAG = this.getClass().getSimpleName();
     private GameThread threadGame;
-    private Controls controls;    
     private GameData gameData;
     private Communication comm;
     
     
-    public GameView(Context context, Display displayMetrics, PlayerType playerType, CommunicationType communicationType) {
+    public GameView(Context context, Display displayMetrics, PlayerType playerType, CommunicationType communicationType, String ip) {
         super(context);
         getHolder().addCallback(GameView.this);       
         
         if(playerType != null && communicationType != null ){
-        	this.playerType = playerType;
-        	this.communicationType = communicationType;
+	        	this.playerType = playerType;
+	        	this.communicationType = communicationType;
         }else{        	
         	Toast.makeText(context,"Can not specify player or communication type", Toast.LENGTH_LONG).show();
         	throw new NullPointerException();
         }        
+        
         this.setOnTouchListener(TouchListener.getInstance());        
-        threadGame = new GameThread(getHolder(), this, context, displayMetrics);
+        threadGame = new GameThread(getHolder(), this, context, displayMetrics, ip);
         setFocusable(true);
     }
 
@@ -118,7 +118,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
        		packet.setBallData(gameData);
     	}else{ //client
     		packet = comm.reciveData();
-    		packet.setPlayerData(gameData); // <- nullpointer excep
+    		packet.setPlayerData(gameData); 
     		packet.setBallData(gameData);
     		packet = new Packet(gameData, getPlayerType());
     		comm.sendData(packet);
@@ -140,10 +140,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	
 	public void setGameData(GameData gameData){
 		this.gameData = gameData;
-	}
-	
-	public void setControls(Controls controls){
-		this.controls = controls;
 	}
 	
 	public void setCommunication(Communication comm){

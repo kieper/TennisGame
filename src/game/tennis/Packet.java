@@ -83,7 +83,7 @@ public class Packet implements Serializable{
 		oos.writeByte(data.size()); //write how much elements will be sent
 		for(Buffer g:data){
 			oos.writeObject(g); //write all elements from array list
-		}
+		}		
 	}
 	
 	public static Packet creatorPacket(ObjectInputStream ois ) {

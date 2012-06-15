@@ -29,7 +29,7 @@ public class Player implements Graphic{
 	public final double PLAYER_SIZE_RATIO = 0.2;
 	private final int DST_FROM_TABLE = -15;
 	private String TAG = this.getClass().getSimpleName();
-	
+	private boolean D = false;
 	private Rect sideRect;
 	
     public Player(Background bg, PlayerType playerType) {
@@ -67,7 +67,7 @@ public class Player implements Graphic{
     	speed.UpdateXYPosition();
     	updatePlayerRect();
     	canvas.drawRect(rectPlayer, paint);
-    	Log.d(TAG, "drawPlayer position (" +speed.getX() + ", " +speed.getY()+ ")");
+    	if(D)Log.d(TAG, "drawPlayer position (" +speed.getX() + ", " +speed.getY()+ ")");
     }
     
     public Rect getRect(){

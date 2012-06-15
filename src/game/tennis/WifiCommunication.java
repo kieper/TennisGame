@@ -17,10 +17,12 @@ import java.util.Enumeration;
 import tcpip.communication.DatagramClient;
 import tcpip.communication.DatagramServerThread;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ public class WifiCommunication implements Communication {
 	private ObjectInputStream inStream;
 	private boolean isconnected;	
 	private static final String TAG = "WifiCommunication";
+	
 	private final int PORT = 4000;
 	private final int VALIDATION_CODE = 1234;
 	private final int TIMEOUT = 100000;
@@ -45,13 +48,18 @@ public class WifiCommunication implements Communication {
 	
 	private long timeCorrection = 0;
 	
-	public WifiCommunication(Context context, PlayerType playerType){
+	private String preConfIP = null; //got ip from Activity?
+	
+	public WifiCommunication(Context context, PlayerType playerType, String ip){
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		Log.d(TAG, "Checking wifi Status");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		wt = new waitThread();
 		wt.setRunning(true);
 		wt.start();
+		
+		this.preConfIP = ip;
+		
 	    if( ! cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting() ) {
 	    	Log.d(TAG, "WIFI not connected");
 	        Toast.makeText(context, "Turn on wifi, and try again",  Toast.LENGTH_LONG).show();
@@ -159,13 +167,16 @@ public class WifiCommunication implements Communication {
     	switch(playerType){
     	case PLAYER1: 
     		String ip = null;
-    		try {
-				ip = DatagramClient.sendBroadcast(PORT, broadCastAddr);
-			} catch (IOException e1) {
-				Log.e(TAG, "Cannot broadcast datagram to server");
-				e1.printStackTrace();
-			}
-
+    		if(preConfIP != null){
+    			ip = preConfIP;
+    		}else{
+    			try {
+    				ip = DatagramClient.sendBroadcast(PORT, broadCastAddr);
+				} catch (IOException e1) {
+					Log.e(TAG, "Cannot broadcast datagram to server");
+					e1.printStackTrace();
+				}
+    		}	
     		if(ip != null){
     			connect(ip, PORT);
         		GameData.getInstance().changeDrawing(2);
@@ -175,7 +186,7 @@ public class WifiCommunication implements Communication {
         		GameData.getInstance().changeDrawing(2);
         		DrawMsg.drawMsg("Nie udalo sie nawiazac polaczenia", 2000);
     			Log.d(TAG, "Client not connected");
-    		} break;
+    		}break;
     		
     	case PLAYER2:
         default:
@@ -264,7 +275,7 @@ public class WifiCommunication implements Communication {
     		//on player2 time1 -> recv player1 time0
     		//on player2 time1 -> send player2 time1
     		//on player2 time3 -> recv player1 time2
-			Packet packet = Packet.creatorPacket(inStream);
+			//Packet packet = Packet.creatorPacket(inStream);
     		time0 = recvTimeSynchronizationPacket();
     		time1 = System.currentTimeMillis();
     		sentTimeSynchronizationPacket(time1);
