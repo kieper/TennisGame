@@ -57,7 +57,7 @@ public class WifiActivity extends Activity {
 	        	Log.e(TAG, "Error while specifying communication type");	
 	        }         
 	        
-	        label.setText(WifiCommunication.getLocalIpAddress());
+	        label.setText("Your ip is: " + WifiCommunication.getLocalIpAddress());
 	        
 	        conBtn.setOnClickListener(new ConClickListener(this));
 	        
