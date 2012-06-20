@@ -87,10 +87,19 @@ public class WifiActivity extends Activity {
     	
 		@Override
 		public void onClick(View v) {
-			if(checkIPv4(edit.getText().toString()) || PlayerType.PLAYER2 == playerType){
+			if(PlayerType.PLAYER1 == playerType){
+				if(checkIPv4(edit.getText().toString())){
+					Intent intent = new Intent(activity, GameActivity.class);
+	            	intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER1.toString());
+	            	intent.putExtra(PreConfig.COMM_TYPE.toString(), CommunicationType.WIFI.toString());
+	            	intent.putExtra(PreConfig.IP.toString(), ip);
+	            	startActivity(intent);		
+	            	activity.finish();
+				}
+			}else{
 				Intent intent = new Intent(activity, GameActivity.class);
             	intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
-            	intent.putExtra(PreConfig.COMM_TYPE.toString(), CommunicationType.NONE.toString());
+            	intent.putExtra(PreConfig.COMM_TYPE.toString(), CommunicationType.WIFI.toString());
             	intent.putExtra(PreConfig.IP.toString(), ip);
             	startActivity(intent);		
             	activity.finish();
