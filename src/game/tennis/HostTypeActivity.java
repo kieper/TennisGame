@@ -74,7 +74,7 @@ public class HostTypeActivity extends Activity {
         	if(commType == CommunicationType.BLUETOOTH){
         		intent = new Intent(activity, BtActivity.class);
         	}else{
-        		intent = new Intent(activity, GameActivity.class);            	
+        		intent = new Intent(activity, WifiActivity.class);            	
         	}
         	intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
             intent.putExtra(PreConfig.COMM_TYPE.toString(), commType.toString());

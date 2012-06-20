@@ -283,7 +283,7 @@ public class WifiCommunication implements Communication {
 
     		//(time2 + time0)/2 -> player1 time
     		//recived time1     -> player2 time
-    		timeCorrection = (time2 + time0)/2 - time1;
+    		timeCorrection = -((time2 + time0)/2 - time1);
     		break;
     	}
 	}
