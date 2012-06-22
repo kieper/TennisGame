@@ -36,6 +36,12 @@ import java.util.*;
 
 import android.util.Log;
 
+/**
+ * This class waits for datagram to be sent from client and responds to it, thanks to that 
+ * connection can be estabilished.
+ * @author Kieper
+ *
+ */
 public class DatagramServerThread extends Thread {
 
 	public static boolean isClientFound = false;

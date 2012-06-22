@@ -33,7 +33,8 @@ public class BtActivity extends Activity {
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
-
+    private static final int REQUEST_DISCOREVABLE = 3;
+    
     // Local Bluetooth adapter
     private BluetoothAdapter mBluetoothAdapter = null;
 
@@ -75,6 +76,8 @@ public class BtActivity extends Activity {
         
         scanBtn.setOnClickListener(new ScanOnClickListener(this));
         
+        ((Button) findViewById(R.id.button_scan)).setText(R.string.bt_search4devices);
+        
     }
 
     @Override
@@ -83,25 +86,15 @@ public class BtActivity extends Activity {
         if(D) Log.e(TAG, "++ ON START ++");
         
         // If BT is not on, request that it be enabled.
-        // setupChat() will then be called during onActivityResult
         if (!mBluetoothAdapter.isEnabled()) {
+        	if(D) Log.d(TAG, "turning on bt by activity ");
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        // Otherwise, setup the chat session
-        } 
-        
-        Bundle bundle = this.getIntent().getExtras();
-        PlayerType playerType = PlayerType.valueOf((String) bundle.get(PreConfig.PLAYER.toString()));
-
-        if(playerType == PlayerType.PLAYER2){
+        } else {
         	ensureDiscoverable();
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER1.toString());
-            intent.putExtra(PreConfig.COMM_TYPE.toString(), commType.toString());
-            startActivity(intent);
-        }else{
-        	
+        	startServerSideBt();
         }
+        
     }
 
     private void ensureDiscoverable() {
@@ -110,8 +103,12 @@ public class BtActivity extends Activity {
             BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
+            startActivityForResult(discoverableIntent, REQUEST_DISCOREVABLE);
+
+            //startActivity(discoverableIntent);
         }
+        if(D) Log.d(TAG, "ended ensure discoverable function");
+        
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -135,13 +132,20 @@ public class BtActivity extends Activity {
             break;
         case REQUEST_ENABLE_BT:
             // When the request to enable Bluetooth returns
+        	if(D) Log.d(TAG, "Bluetooth enabled");
             if (resultCode != Activity.RESULT_OK) {
                 // User did not enable Bluetooth or an error occured
                 Log.d(TAG, "BT not enabled");
                 Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_LONG).show();
-                finish();
             }
+            if(playerType == PlayerType.PLAYER2) ensureDiscoverable();
+            break;
+        case REQUEST_DISCOREVABLE:
+        	if(D) Log.d(TAG, "Discorable ended in start for result activity, starting server side");
+        	startServerSideBt();          
+            break;
         }
+        
     }
 
     @Override
@@ -167,6 +171,17 @@ public class BtActivity extends Activity {
         return false;
     }
     
+    private void startServerSideBt(){
+        if(playerType == PlayerType.PLAYER2){
+        	if(D) Log.d(TAG, "Server side, ensure discorovebale, start game activty");
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
+            intent.putExtra(PreConfig.COMM_TYPE.toString(), commType.toString());
+            startActivity(intent);
+            finish();
+        }  
+    }
+    
     private class ScanOnClickListener implements OnClickListener{
 
     	private Activity activity;
@@ -182,4 +197,6 @@ public class BtActivity extends Activity {
 		}
     	
     }
+    
+    
 }

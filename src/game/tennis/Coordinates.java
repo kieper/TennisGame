@@ -9,7 +9,7 @@ import java.io.Serializable;
 import android.graphics.Rect;
 
 /**
- *
+ * Class hold data of object coordinates
  * @author Kieper
  */
 public class Coordinates implements Serializable{
@@ -30,10 +30,19 @@ public class Coordinates implements Serializable{
             setY(y);
         }
         
+        /**
+         * returns x-axis value
+         * @return
+         */
         public double getX() {
             return x;
         }
 
+        /**
+         * sets x-axis value
+         * @param value
+         * @return
+         */
         public double setX(double value) {
             x = value;
             double m=0;
@@ -50,10 +59,19 @@ public class Coordinates implements Serializable{
             return m;
         }
 
+        /**
+         * returns y-axis value
+         * @return
+         */
         public double getY() {
             return y;
         }
 
+        /**
+         * sets Y-axis value
+         * @param value
+         * @return
+         */
         public double setY(double value) {
             y = value;
             double m=0;
@@ -70,16 +88,30 @@ public class Coordinates implements Serializable{
             return m;
         }
 
+        /**
+         * sets x,y-axis values
+         * @param x
+         * @param y
+         */
         public void setXY(double x, double y){
             setY(y);
             setX(x);
         }
 
+        /**
+         * Adds to current values, new values given in parameter
+         * @param x how much to add to x-axis
+         * @param y how much to add to y-axis
+         */
         public void updateXY(double x, double y){
             setY(y + getY());
             setX(x + getX());
         }
 
+        /**
+         * Sets Rectangular constraint of object(x,y values cant get out of this rectangle)
+         * @param constraint
+         */
         public void setConstraint(Rect constraint){
         	this.constraint = constraint;
         }

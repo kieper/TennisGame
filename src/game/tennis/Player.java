@@ -11,7 +11,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 /**
- *
+ * Class responsible for player activites in game like drawing(rectangular shape of player) or updating coordinates
  * @author Kieper
  */
 public class Player implements Graphic{
@@ -56,13 +56,17 @@ public class Player implements Graphic{
         
     }
     
-    
+   /**
+    * moves player by given ratio
+    */
     public void move(double ratio){
-    	//speed.setAccelerationY(ratio);
     	double newSpeed = ratio*10;
     	speed.setYSpeed((speed.getYSpeed() + newSpeed)/2);
     }
 
+    /**
+     * Draws player on given canvas
+     */
     public void draw(Canvas canvas){
     	speed.UpdateXYPosition();
     	updatePlayerRect();
@@ -70,14 +74,24 @@ public class Player implements Graphic{
     	if(D)Log.d(TAG, "drawPlayer position (" +speed.getX() + ", " +speed.getY()+ ")");
     }
     
+    /**
+     * Returns rectangle of player
+     */
     public Rect getRect(){
     	return rectPlayer;
     }
     
+    /**
+     * returns player type
+     * @return
+     */
     public PlayerType getPlayerType(){
     	return playerType;
     }
     
+    /**
+     * updates rectangle of player
+     */
     private void updatePlayerRect(){
     	rectPlayer.top = (int) (speed.getY() - playerHeight/2);
     	rectPlayer.left = (int) (speed.getX() - playerWidth/2);

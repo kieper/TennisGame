@@ -34,6 +34,14 @@ public class GameThread extends Thread   {
     private Display displayMetrics;
     private String ip;
     
+    /**
+     * Constructor of GameThread, createœ needed data and fires functions needed for game in loop
+     * @param surfaceHolder of the view
+     * @param panel instance of the view
+     * @param context of the view
+     * @param displayMetrics of the view
+     * @param ip to connect to server if communication is over wifi
+     */
     public GameThread(SurfaceHolder surfaceHolder, GameView panel, Context context, Display displayMetrics, String ip) {
         this.surfaceHolder = surfaceHolder;
         this.panel = panel;
@@ -42,14 +50,25 @@ public class GameThread extends Thread   {
         this.ip = ip;
     }
 
+    /**
+     * turns on/off game thread 
+     * @param run on-true/off-false
+     */
     public void setRunning(boolean run) {
         this.run = run;
     }
 
+    /**
+     * returns surface holder
+     * @return
+     */
     public SurfaceHolder getSurfaceHolder() {
         return surfaceHolder;
     }
 
+    /**
+     * Main loop executing actions needed for game
+     */
     @Override
     public void run() {
         Canvas c;
@@ -120,8 +139,10 @@ public class GameThread extends Thread   {
         }
     }
     
+    /**
+     * Initializes classes needed for game
+     */
     public void initialize(){
-    
     	gameData = GameData.getInstance();
     	gameData.initialize(context, displayMetrics);
     	calcGame = new CalculateGame();
@@ -132,6 +153,9 @@ public class GameThread extends Thread   {
     	commThread.start();
     }
     
+    /**
+     * Runs functions to check for collisions
+     */
     public void runCalculateGame(){
 
         gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));

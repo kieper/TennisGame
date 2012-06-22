@@ -46,6 +46,7 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int bt_not_enabled_leaving=0x7f04000c;
+        public static final int bt_search4devices=0x7f04000f;
         public static final int button_scan=0x7f040009;
         public static final int con_btn_text=0x7f04000e;
         /**  Options Menu 

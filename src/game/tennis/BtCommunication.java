@@ -36,10 +36,11 @@ public class BtCommunication implements Communication {
 		wt.setRunning(true);
 		wt.start();
 		if (D) Log.d(TAG, "Player in bt comm " + GameView.getPlayerType().toString()); 
-		if(GameView.getPlayerType() == PlayerType.PLAYER1){
+		if(GameView.getPlayerType() == PlayerType.PLAYER2){
 			listenForClient();
 		}else{
 			if(device != null){
+				if (D) Log.d(TAG, "Device to connect to: " + device.toString()); 
 				connectToServer(device);
 			}
 		}
@@ -100,9 +101,42 @@ public class BtCommunication implements Communication {
     }
     
     public void connectToServer(BluetoothDevice device){
-        mConnectThread = new ConnectThread(device);
-        mConnectThread.start();
+ //       mConnectThread = new ConnectThread(device);
+ //       mConnectThread.start();
+    	BluetoothSocket mmSocket;
+        BluetoothSocket tmp = null;
+
+        // Get a BluetoothSocket for a connection with the
+        // given BluetoothDevice
+        try {
+            tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+        } catch (IOException e) {
+            Log.e(TAG, "create() failed", e);
+        }
+        mmSocket = tmp;
+
         
+        mAdapter.cancelDiscovery();
+
+        // Make a connection to the BluetoothSocket
+        try {
+            // This is a blocking call and will only return on a
+            // successful connection or an exception
+        	
+            mmSocket.connect();
+            streamInit(mmSocket);
+        } catch (IOException e) {
+
+            // Close the socket
+            try {
+                mmSocket.close();
+            } catch (IOException e2) {
+                Log.e(TAG, "unable to close() socket during connection failure", e2);
+            }
+            // Start the service over to restart listening mode
+
+            return;
+        }
     }
     
     /**
@@ -124,7 +158,7 @@ public class BtCommunication implements Communication {
                 Log.e(TAG, "create() failed", e);
             }
             mmSocket = tmp;
-            streamInit(mmSocket);
+            
         }
 
         public void run() {
@@ -140,6 +174,7 @@ public class BtCommunication implements Communication {
                 // successful connection or an exception
             	
                 mmSocket.connect();
+                streamInit(mmSocket);
             } catch (IOException e) {
 
                 // Close the socket

@@ -16,6 +16,14 @@ public class CommThread extends Thread {
     private String ip;
 	private final String TAG  = this.getClass().getSimpleName();
     
+	/**
+	 * Constructor of CommThread, this thread takes care of communication, connecting, data exchange
+	 * @param panel
+	 * @param context
+	 * @param comm
+	 * @param gameData
+	 * @param ip
+	 */
     public CommThread(GameView panel, Context context, Communication comm, GameData gameData, String ip) {
         this.panel = panel;
         this.context = context;
@@ -23,10 +31,17 @@ public class CommThread extends Thread {
         this.ip = ip;
     }
 
+    /**
+     * Turns on/off CommThread
+     * @param run on-true/off-false
+     */
     public void setRunning(boolean run) {
         this.run = run;
     }
 
+    /**
+     * Main loop in which data exchange is done
+     */
     public void run() {
     	initialize();
     	
@@ -41,11 +56,14 @@ public class CommThread extends Thread {
         }
     }
     
+    /**
+     * Initializes connection over specified connection type
+     */
     public void initialize(){
         Log.d(TAG, "Player set to " + GameView.getPlayerType());
     	switch( GameView.getCommunicationType()){
     		case WIFI:
-    			Log.d(TAG, "Starting WIFI communication");
+    			Log.d(TAG, "Starting WIFI communication, ip to connect is: " + ip);
     			comm = new WifiCommunication(context, GameView.getPlayerType(), ip);
     			break;        		
     		case NONE:
@@ -71,6 +89,10 @@ public class CommThread extends Thread {
     	connected = true;
     }
     
+    /**
+     * Returns wheter class is connected to any device
+     * @return
+     */
     public boolean isConnected(){
     	return connected;
     }

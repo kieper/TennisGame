@@ -8,7 +8,7 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 
 /**
- *
+ * Implements Draw interface, class responsible for drawing game view
  * @author Kieper
  */
 public class DrawGame implements Draw{

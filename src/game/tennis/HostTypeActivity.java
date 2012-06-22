@@ -58,6 +58,7 @@ public class HostTypeActivity extends Activity {
             intent.putExtra(PreConfig.COMM_TYPE.toString(), commType.toString());
             startActivity(intent); 
             activity.finish();
+            
         }
 
         public onJoinClick(Activity activity) {

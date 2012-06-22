@@ -9,14 +9,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 
 public class WifiActivity extends Activity {
@@ -88,7 +86,8 @@ public class WifiActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			if(PlayerType.PLAYER1 == playerType){
-				if(checkIPv4(edit.getText().toString())){
+				if(D) Log.d(TAG, "Validiating ip : " + checkIPv4(edit.getText().toString()));
+				if(checkIPv4(edit.getText().toString()) || edit.getText().toString() == "" ){
 					Intent intent = new Intent(activity, GameActivity.class);
 	            	intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER1.toString());
 	            	intent.putExtra(PreConfig.COMM_TYPE.toString(), CommunicationType.WIFI.toString());

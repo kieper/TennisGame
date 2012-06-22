@@ -19,4 +19,5 @@
     <string name="bt_not_enabled_leaving">bt is not enabled</string>
     <string name="your_ip">Your ip is</string>
     <string name="con_btn_text">Connect</string>
+    <string name="bt_search4devices">Search for devices</string>
 </resources>

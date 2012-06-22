@@ -5,6 +5,12 @@ import java.net.*;
 
 import android.util.Log;
 
+/**
+ * This class sends datagram to everyone in network, if server device for game works in this network it should
+ * respond and by that we will get ip of it.
+ * @author Kieper
+ *
+ */
 public class DatagramClient {
 
 	private final static String TAG = "SendBroadcast";

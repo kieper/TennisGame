@@ -7,6 +7,11 @@ import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
+/**
+ * Class responsible for drawing messages with text
+ * @author Kieper
+ *
+ */
 public class DrawMsg implements Draw{
 	
 	private Paint msgPaint;
