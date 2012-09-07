@@ -1,6 +1,11 @@
-package game.tennis;
+package tcpip.communication.game;
 
-public class SoloCommunication implements Communication{
+import game.tennis.GameData;
+import game.tennis.draw.Ball;
+import game.tennis.draw.Player;
+import game.tennis.draw.PlayerType;
+
+public class SoloCommunication extends Communication{
 
 	private GameData gameData;
 	private PlayerType playerType;

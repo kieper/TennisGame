@@ -1,4 +1,4 @@
-package game.tennis;
+package game.tennis.draw;
 
 public enum PlayerType {
 PLAYER1, // klient

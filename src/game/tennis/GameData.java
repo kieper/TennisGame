@@ -5,11 +5,21 @@
 
 package game.tennis;
 
+import game.tennis.draw.Background;
+import game.tennis.draw.Ball;
+import game.tennis.draw.Draw;
+import game.tennis.draw.DrawGame;
+import game.tennis.draw.DrawMsg;
+import game.tennis.draw.GraphicObject;
+import game.tennis.draw.Player;
+import game.tennis.draw.PlayerType;
+
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.Display;
-import java.util.ArrayList;
 
 /**
  *
@@ -17,7 +27,7 @@ import java.util.ArrayList;
  */
 public class GameData {
 	
-    private static GameData gameData = new GameData();
+    private static GameData gameData = null;
 	private ArrayList<GraphicObject> graphicObjects;
     private Background background;
     private Player player1;
@@ -26,10 +36,11 @@ public class GameData {
     private Draw drawGame;
     private Draw drawMsg;
     private int drawFlag = 1; // keeps state of what should be drawn on view 1 - game, 2 - msg
+    private Display displayMaterics;
     
     private GameData(){
         graphicObjects = new ArrayList<GraphicObject>();        
-        drawGame = new DrawGame(this);
+        drawGame = new DrawGame();
         drawMsg = new DrawMsg();
     }
 
@@ -38,11 +49,20 @@ public class GameData {
         player1 = new Player(background, PlayerType.PLAYER1);
         player2 = new Player(background, PlayerType.PLAYER2);
         ball = new Ball(background);
-        ((DrawMsg)drawMsg).setDisplayMetrics(displayMetrics);
+        this.displayMaterics = displayMetrics;
     }
     
     public static GameData getInstance(){
-    	return gameData;
+        if(gameData == null) {
+            synchronized(GameData.class) { 
+                gameData = new GameData();
+            }
+         }
+        return gameData;
+    }
+    
+    public Rect getTableRect(){
+        return background.getTableRect();
     }
     
     public ArrayList<GraphicObject> getObjects(){
@@ -100,4 +120,12 @@ public class GameData {
     public void changeDrawing(int state){
     	drawFlag = state;
     }
+
+	public Display getDisplayMaterics() {
+		return displayMaterics;
+	}
+
+	public void dispose(){
+	    GameData.gameData = null;
+	}
 }

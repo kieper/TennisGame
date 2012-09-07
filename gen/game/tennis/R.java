@@ -18,16 +18,20 @@ public final class R {
         public static final int btBtn=0x7f060001;
         public static final int btnPlay=0x7f060009;
         public static final int button_scan=0x7f060006;
-        public static final int con_btn=0x7f06000d;
-        public static final int discoverable=0x7f06000f;
+        public static final int con_btn=0x7f060010;
+        public static final int discoverable=0x7f060013;
         public static final int hostBtn=0x7f060007;
-        public static final int ip_edit=0x7f06000c;
+        public static final int ip_edit=0x7f06000f;
         public static final int ip_label=0x7f06000b;
         public static final int joinBtn=0x7f060008;
         public static final int multiBtn=0x7f06000a;
         public static final int new_devices=0x7f060005;
         public static final int paired_devices=0x7f060003;
-        public static final int scan=0x7f06000e;
+        public static final int radioAuto=0x7f06000d;
+        public static final int radioGroup1=0x7f060011;
+        public static final int radioIp=0x7f06000e;
+        public static final int radio_group=0x7f06000c;
+        public static final int scan=0x7f060012;
         public static final int title_new_devices=0x7f060004;
         public static final int title_paired_devices=0x7f060002;
         public static final int wifiBtn=0x7f060000;
@@ -57,6 +61,8 @@ public final class R {
         public static final int none_found=0x7f040006;
         public static final int none_paired=0x7f040005;
         public static final int playBtn=0x7f040002;
+        public static final int radio_auto=0x7f040010;
+        public static final int radio_ip=0x7f040011;
         /**   DeviceListActivity 
          */
         public static final int scanning=0x7f040003;

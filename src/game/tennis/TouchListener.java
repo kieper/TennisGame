@@ -1,5 +1,7 @@
 package game.tennis;
 
+import java.util.ArrayList;
+
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,9 +14,16 @@ import android.view.View.OnTouchListener;
  *
  */
 public class TouchListener implements OnTouchListener {
+	
+	//Singleton instance of this class(thread safe)
 	private static TouchListener touchListener = new TouchListener();
-	private static TouchEvent touchEvent = null;
-	private static String TAG = "TouchListener";
+	
+	//List of objects implementing TouchEvent interface
+	private ArrayList<TouchEvent> touchEventList = new ArrayList<TouchEvent>();
+	
+	//Debuging Tag
+	private String TAG = "TouchListener";
+	
 	/**
 	 * Just private to be singleton
 	 */
@@ -35,18 +44,28 @@ public class TouchListener implements OnTouchListener {
 	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		Log.e(TAG, "Touch in listener status of touchevent = " + touchEvent);
-		if(touchEvent != null){
-			touchEvent.touch(event);
+		Log.e(TAG, "Touch in listener status of touchevent = " );
+		if(!touchEventList.isEmpty()){
+			for(TouchEvent t:touchEventList){
+				t.touch(event);
+			}
 		}
 		return false;
 	}
 
-	/*
-	 * Sets object from which touch method will be used
+	/**
+	 * Adds to list object for which touch method will be used
+	 * @param touchClass class implementing TouchEvent interface
 	 */
-	public void setTouchEvent(TouchEvent touchClass){
-		touchEvent = touchClass;
+	public void addTouchEvent(TouchEvent touchClass){
+		touchEventList.add(touchClass);
 	}
 	
+	/**
+	 * Remove object from list
+	 * @param touchClass class implementing TouchEvent interface
+	 */
+	public void removeTouchEvent(TouchEvent touchClass){
+		touchEventList.remove(touchClass);
+	}
 }

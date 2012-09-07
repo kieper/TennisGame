@@ -1,4 +1,4 @@
-package game.tennis;
+package game.tennis.draw;
 
 import java.io.Serializable;
 

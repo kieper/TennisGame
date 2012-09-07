@@ -5,12 +5,15 @@
 package game.tennis;
 
 
+import game.tennis.draw.Controls;
+import game.tennis.draw.DrawPoints;
+import tcpip.communication.game.CommThread;
+import tcpip.communication.game.Communication;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
-import android.widget.Toast;
 
 /**
  *
@@ -137,6 +140,8 @@ public class GameThread extends Thread   {
             }
             prevBeginTime = beginTime;
         }
+        
+        finish();
     }
     
     /**
@@ -145,8 +150,9 @@ public class GameThread extends Thread   {
     public void initialize(){
     	gameData = GameData.getInstance();
     	gameData.initialize(context, displayMetrics);
-    	calcGame = new CalculateGame();
-    	controls = new GameControls(context);    
+    	calcGame = new CalculateGame();  
+    	
+    	controls = new GameControls(context);
     	
     	commThread = new CommThread(panel, context, comm, gameData, ip);
     	commThread.setRunning(true);
@@ -157,12 +163,19 @@ public class GameThread extends Thread   {
      * Runs functions to check for collisions
      */
     public void runCalculateGame(){
-
         gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer1(), gameData.getBall()));
         gameData.getBall().move(calcGame.collisionCheck(gameData.getPlayer2(), gameData.getBall()));    
-    	controls.controlPlayer(gameData.getPlayer(GameView.getPlayerType()));
-        
+    	controls.controlPlayer(gameData.getPlayer(GameView.getPlayerType()));        
     }
     
+    /**
+     * Cleanup
+     */
+    public void finish(){
+        commThread.setRunning(false);
+        controls.dispose();        
+        gameData.dispose();
+        DrawPoints.dispose();
+    }
 
 }

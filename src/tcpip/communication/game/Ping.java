@@ -1,4 +1,4 @@
-package game.tennis;
+package tcpip.communication.game;
 
 import java.io.Serializable;
 

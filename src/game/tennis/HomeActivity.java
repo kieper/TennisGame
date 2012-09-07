@@ -1,4 +1,6 @@
 package game.tennis;
+import game.tennis.draw.PlayerType;
+import tcpip.communication.game.CommunicationType;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class HomeActivity extends Activity {
             intent.putExtra(PreConfig.PLAYER.toString(), PlayerType.PLAYER2.toString());
             intent.putExtra(PreConfig.COMM_TYPE.toString(), CommunicationType.NONE.toString());
             startActivity(intent);
-            activity.finish();
+            finish();
         }
 
         public onPlayClick(Activity activity) {
@@ -58,7 +60,7 @@ public class HomeActivity extends Activity {
         public void onClick(View v) {
             Intent intent = new Intent(activity, MultiActivity.class);
             startActivity(intent);
-            activity.finish();
+            finish();
         }
 
         public onMultiClick(Activity activity) {

@@ -24,16 +24,16 @@
       <operations public="true" package="true" protected="true" private="false"/>    
     </display>  
   </class>  
-  <class id="4" corner="BOTTOM_RIGHT" language="java" name="game.tennis.DrawMsg" project="Tennis Game" 
-    file="/Tennis Game/src/game/tennis/DrawMsg.java" binary="false">    
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="game.tennis.draw.DrawMsg" project="Tennis Game" 
+    file="/Tennis Game/src/game/tennis/draw/DrawMsg.java" binary="false">    
     <position height="-1" width="-1" x="527" y="631"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false"/>      
       <operations public="true" package="true" protected="true" private="false"/>    
     </display>  
   </class>  
-  <class id="5" corner="BOTTOM_RIGHT" language="java" name="game.tennis.DrawGame" project="Tennis Game" 
-    file="/Tennis Game/src/game/tennis/DrawGame.java" binary="false">    
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="game.tennis.draw.DrawGame" project="Tennis Game" 
+    file="/Tennis Game/src/game/tennis/draw/DrawGame.java" binary="false">    
     <position height="-1" width="-1" x="490" y="471"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false"/>      

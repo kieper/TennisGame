@@ -1,4 +1,4 @@
-package game.tennis;
+package game.tennis.draw;
 
 import android.graphics.Canvas;
 

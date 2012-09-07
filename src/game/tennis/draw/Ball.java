@@ -1,4 +1,4 @@
-package game.tennis;
+package game.tennis.draw;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,7 +21,7 @@ public class Ball implements Graphic {
 	private Paint paint;
 	private int radius = 5;
 	
-	private final double NORMAL_SPEED = 10;
+	private final double NORMAL_SPEED = 20;
 	private final boolean D = false;
 	
 	private final String TAG = this.getClass().getSimpleName();

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.tennis;
+package game.tennis.draw;
 
 
 import android.graphics.Canvas;
@@ -40,6 +40,7 @@ public final class Background {
         
     }
     
+
     public void draw(Canvas canvas){
     	
         canvas.drawColor(Color.BLACK);

@@ -1,5 +1,6 @@
 package game.tennis;
 
+import game.tennis.draw.DrawMsg;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -8,17 +9,16 @@ public class waitThread extends Thread implements TouchEvent{
 	private boolean run = false;
 
 	private final String TAG  = this.getClass().getSimpleName();
-    private int counter = 0;
-    
+
     public void setRunning(boolean run) {
         this.run = run;
     }
 
     public void run() {
-    	TouchListener.getInstance().setTouchEvent(this);
+    	TouchListener.getInstance().addTouchEvent(this);
         while (run) {
     		GameData.getInstance().changeDrawing(2); //Change drawing style to msg
-    		DrawMsg.drawMsg("Nie udalo sie nawiazac polaczenia  count = " + counter, 10);
+    		DrawMsg.drawMsg("Nie udalo sie nawiazac polaczenia", 10);
         	try{
         		sleep(15);
         	}catch(Exception e){
@@ -34,7 +34,7 @@ public class waitThread extends Thread implements TouchEvent{
 	public void touch(MotionEvent e) {
 		Log.e(TAG, "Touch in waitThread");
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
-			counter++;
+
 		}
 	}
 }

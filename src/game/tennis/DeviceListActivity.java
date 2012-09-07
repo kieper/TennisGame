@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -156,6 +157,7 @@ public class DeviceListActivity extends Activity {
     private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
+        	if(D)Log.d(TAG, "Item chosen ");
             mBtAdapter.cancelDiscovery();
 
             // Get the device MAC address, which is the last 17 chars in the View
@@ -167,7 +169,10 @@ public class DeviceListActivity extends Activity {
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
 
             // Set result and finish this Activity
+            if(D)Log.d(TAG, "Before set result ");
             setResult(Activity.RESULT_OK, intent);
+            if(D) Log.d(TAG, "Result sent to btActivity");
+            	
             finish();
         }
     };
@@ -199,4 +204,18 @@ public class DeviceListActivity extends Activity {
         }
     };
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(this, HomeActivity.class );
+            startActivity(intent);
+            this.finish();
+        }
+        // Call super code so we dont limit default interaction
+        super.onKeyDown(keyCode, event);
+
+        return true;
+    } 
+    
+    
 }

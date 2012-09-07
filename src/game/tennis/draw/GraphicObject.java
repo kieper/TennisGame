@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.tennis;
+package game.tennis.draw;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,7 +11,7 @@ import android.graphics.Canvas;
  *
  * @author Kieper
  */
-class GraphicObject {
+public class GraphicObject {
 
     private Bitmap bitmap;
     private Speed speed;

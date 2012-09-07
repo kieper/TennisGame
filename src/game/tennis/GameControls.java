@@ -1,5 +1,7 @@
 package game.tennis;
 
+import game.tennis.draw.Controls;
+import game.tennis.draw.Player;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -65,4 +67,5 @@ public class GameControls implements Controls{
 	public void callibrate(float calibration) {
 		this.calibration = calibration;		
 	}
+	
 }

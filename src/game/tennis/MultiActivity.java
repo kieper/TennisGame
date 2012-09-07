@@ -1,9 +1,11 @@
 package game.tennis;
 
 
+import tcpip.communication.game.CommunicationType;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -61,4 +63,17 @@ public class MultiActivity extends Activity {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(this, HomeActivity.class );
+            startActivity(intent);
+            this.finish();
+        }
+        // Call super code so we dont limit default interaction
+        super.onKeyDown(keyCode, event);
+
+        return true;
+    } 
+    
 }
